@@ -21,10 +21,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const publishableKey = 'pk_test_ZXBpYy1zb2xlLTMzLmNsZXJrLmFjY291bnRzLmRldiQ';
   return (
     <html lang="en">
       <ClerkProvider
-        publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        publishableKey={publishableKey}
       >
         <body className={poppins.className}>{children}</body>
       </ClerkProvider>
