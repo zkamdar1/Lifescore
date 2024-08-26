@@ -7,12 +7,12 @@ function LogoAndName() {
       <div className="flex gap-2 items-center sm:justify-start justify-normal">
         <span className="text-2xl font-light flex items-center gap-2">
           {/* The icon */}
-          <div style={{ backgroundColor: defaultColor }} className="p-2 rounded-md">
+          <div style={{ backgroundColor: defaultColor.default }} className="p-2 rounded-md">
             <Appicon color="#ffffff" height="34" width="34" />
           </div>
           {/* Name of App */}
           <span
-            style={{ color: defaultColor }}
+            style={{ color: defaultColor.default }}
             className="font-bold text-customRed"
           >
             Life
