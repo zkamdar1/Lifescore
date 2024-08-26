@@ -1,8 +1,8 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import connectToDB from "@/app/lib/connectToDB";
-import User from "@/app/Models/UserSchema";
+import connectToDB from "@/src/app/lib/connectToDB";
+import User from "@/src/app/Models/UserSchema";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
