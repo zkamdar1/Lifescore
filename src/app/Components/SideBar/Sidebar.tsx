@@ -5,7 +5,7 @@ import LogoutSelection from "./LogoutSelection";
 
 function Sidebar() {
     return (
-        <div className="border-r-2 h-screen p-12">
+        <div className="h-screen p-12">
             <LogoAndName />
             <MenuSelection />
             <LogoutSelection />
