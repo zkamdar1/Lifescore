@@ -7,8 +7,8 @@ import HabitsCompleted from "./Components/HabitsCompleted";
 
 function AllHabits() {
     return (
-        <div className="w-full flex bg-slate-50">
-            <div className="w-[80%] m-5">
+        <div className="max-lg:flex-col w-full flex flex-row gap-0 bg-slate-50">
+            <div className="flex-col flex-grow m-3">
                 <AllHabitsTopBar />
                 <HabitsContainer />
                 <HabitsCompleted />

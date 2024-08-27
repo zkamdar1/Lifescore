@@ -14,6 +14,10 @@ const GlobalContext = createContext<GlobalContextType>({
         menuItems: [],
         setMenuItems: () => {},
     },
+    openSideBarObject: {
+        openSideBar: false,
+        setOpenSideBar: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -23,9 +27,14 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         { name: "Tags", isSelected: false, icon: faLayerGroup },
     ]);
 
+    const [openSideBar, setOpenSideBar] = useState(false);
+
     return (
         <GlobalContext.Provider
-            value={{ menuItemObject: { menuItems, setMenuItems } }}
+            value={{
+                menuItemObject: { menuItems, setMenuItems },
+                openSideBarObject: { openSideBar, setOpenSideBar },
+            }}
         >
             {children}
         </GlobalContext.Provider>
