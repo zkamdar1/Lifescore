@@ -1,5 +1,6 @@
 import { menuItemType } from "./MenuItemType";
 import { Dispatch, SetStateAction } from "react";
+import { DarkModeItem } from "./DarkModeTypes";
 
 export type GlobalContextType = {
     menuItemObject: {
@@ -9,5 +10,11 @@ export type GlobalContextType = {
     openSideBarObject: {
         openSideBar: boolean;
         setOpenSideBar: Dispatch<SetStateAction<boolean>>;
+    };
+    darkModeObject: {
+        isDarkMode: boolean;
+        setDarkMode: Dispatch<SetStateAction<boolean>>;
+        darkModeItems: DarkModeItem[];
+        setDarkModeItems: Dispatch<SetStateAction<DarkModeItem[]>>;
     };
 };

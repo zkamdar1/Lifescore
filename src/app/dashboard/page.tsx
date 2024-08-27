@@ -10,8 +10,12 @@ import AllHabits from "../Pages/AllHabits/AllHabits";
 import Statistics from "../Pages/Statistics/Statistics";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { defaultColor, darkModeColor } from "@/colors";
+
 
 function Dashboard() {
+    const { darkModeObject } = useGlobalContextProvider();
+    const { isDarkMode } = darkModeObject;
     const { menuItemObject } = useGlobalContextProvider();
     const { menuItems } = menuItemObject;
     const [selectedMenu, setSelectedMenu] = useState<menuItemType | null>(null);
@@ -38,7 +42,12 @@ function Dashboard() {
     }
 
     return (
-      <div className="flex">
+      <div
+        style={{
+          backgroundColor: isDarkMode ? darkModeColor.backgroundSlate : defaultColor.backgroundSlate,
+        }}
+        className="flex"
+      >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Sidebar />
           {selectComponent}

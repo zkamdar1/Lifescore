@@ -3,10 +3,12 @@ import LogoAndName from "../LogoAndName";
 import MenuSelection from "./MenuSelection";
 import LogoutSelection from "./LogoutSelection";
 import { useGlobalContextProvider } from "../../contextApi";
+import { darkModeColor, defaultColor } from "@/colors";
 
 function Sidebar() {
-    const { openSideBarObject } = useGlobalContextProvider();
+    const { openSideBarObject, darkModeObject } = useGlobalContextProvider();
     const { openSideBar, setOpenSideBar } = openSideBarObject;
+    const { isDarkMode } = darkModeObject;
     const sideBarRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -24,8 +26,12 @@ function Sidebar() {
 
     return (
         <div
+            style={{
+                color: isDarkMode ? darkModeColor.textColor : defaultColor.textColor,
+                backgroundColor: isDarkMode ? darkModeColor.background : defaultColor.background
+            }}
             ref={sideBarRef}
-            className={`${!openSideBar ? "max-xl:hidden" : "fixed shadow-lg"} flex-grow z-50 p-10 flex-col bg-white min-h-screen`}
+            className={`${!openSideBar ? "max-xl:hidden" : "fixed shadow-lg"} flex-grow z-50 p-10 flex-col bg-white min-h-screen transition-all`}
         >
             <LogoAndName />
             <MenuSelection />

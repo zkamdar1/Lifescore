@@ -5,10 +5,13 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { UserButton, UserProfile } from "@clerk/nextjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useGlobalContextProvider } from "@/src/app/contextApi";
+import { darkModeColor,defaultColor } from "@/colors";
 
 function TopBar() {
-  const { openSideBarObject } = useGlobalContextProvider();
+  const { openSideBarObject, darkModeObject } = useGlobalContextProvider();
   const { openSideBar, setOpenSideBar } = openSideBarObject;
+  const { isDarkMode, setDarkMode, darkModeItems, setDarkModeItems } =
+    darkModeObject;
   const userButtonAppearance = {
     elements: {
       userButtonAvatarBox: "w-10 h-10",
@@ -33,7 +36,15 @@ function TopBar() {
   }, []);
 
   return (
-    <div className="bg-white p-5 rounded-md flex justify-between">
+    <div
+      style={{
+        color: isDarkMode ? darkModeColor.textColor : defaultColor.textColor,
+        backgroundColor: isDarkMode
+          ? darkModeColor.background
+          : defaultColor.background,
+      }}
+      className="bg-white p-5 rounded-md flex justify-between"
+    >
       <div className="flex gap-4">
         <div className="max-lg:flex hidden">
           <UserButton appearance={userButtonAppearance} />
@@ -43,9 +54,7 @@ function TopBar() {
             <span className="font-medium">Hi There</span>
             <span className="font-light">, Kamdar</span>
           </span>
-          <span
-            className="font-light text-[14px] text-gray-400"
-          >
+          <span className="font-light text-[14px] text-gray-400">
             welcome back!
           </span>
         </div>
