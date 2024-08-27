@@ -8,6 +8,8 @@ import { menuItemType } from "../Types/MenuItemType";
 import Tags from "../Pages/Tags/Tags";
 import AllHabits from "../Pages/AllHabits/AllHabits";
 import Statistics from "../Pages/Statistics/Statistics";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function Dashboard() {
     const { menuItemObject } = useGlobalContextProvider();
@@ -36,10 +38,12 @@ function Dashboard() {
     }
 
     return (
-        <div className="flex">
-            <Sidebar />
-            {selectComponent}
-        </div>
+      <div className="flex">
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Sidebar />
+          {selectComponent}
+        </LocalizationProvider>
+      </div>
     );
 }
 
