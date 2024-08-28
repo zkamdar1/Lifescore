@@ -8,6 +8,8 @@ import React, { useEffect, useRef, useState } from "react";
 import IconWindow from "./IconsWindow/IconWindow";
 import { icon, IconProp } from "@fortawesome/fontawesome-svg-core";
 import TimerPicker from "./TimerPicker";
+import HabitWindowTag from "./HabitWindow/HabitWindowTags";
+import { AreaType } from "@/src/app/Types/GlobalTypes";
 
 type FrequencyType = {
     type: string;
@@ -28,6 +30,7 @@ type HabitType = {
     frequency: FrequencyType[];
     notificationTime: string;
     isNotificatonOn: boolean;
+    areas: AreaType[];
 };
 
 type RepeatOption = {
@@ -46,6 +49,7 @@ function HabitWindow() {
         frequency: [{ type: "Daily", days: ["M"], number: 1}],
         notificationTime: "",
         isNotificatonOn: false,
+        areas: [{id: 0, icon: faQuestion, name: ""}],
     });
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
@@ -94,6 +98,12 @@ function HabitWindow() {
 
       setHabitItem(copyHabitItem);
     }
+  
+    function getSelectedAreaItems(selectedAreaItem: AreaType[]) {
+      const copyHabitItem = { ...habitItem };
+      copyHabitItem.areas = selectedAreaItem;
+      setHabitItem(copyHabitItem);
+    }
 
     useEffect(() => {
         const copyHabitItem = { ...habitItem };
@@ -128,6 +138,7 @@ function HabitWindow() {
                 onChangeWeeksOption={changeWeeksOption}
             />
             <Reminder habitItem={habitItem} setHabitItem={setHabitItem} />
+            <HabitWindowTag onChange={getSelectedAreaItems}/>
             <SaveButton habit={habitItem} />
         </div>
     );

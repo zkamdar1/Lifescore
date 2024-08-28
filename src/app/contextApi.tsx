@@ -10,7 +10,11 @@ import {
     faLayerGroup,
     faSun,
     faMoon,
+    faUsers,
+    faGraduationCap,
+    faCode,
 } from "@fortawesome/free-solid-svg-icons";
+import { AreaType } from "./Types/GlobalTypes";
 
 const GlobalContext = createContext<GlobalContextType>({
     menuItemObject: {
@@ -35,6 +39,10 @@ const GlobalContext = createContext<GlobalContextType>({
         openTimePickerWindow: false,
         setOpenTimePickerWindow: () => {},
     },
+    allAreasObject: {
+        allAreas: [],
+        setAllAreas: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -47,6 +55,12 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [darkModeItems, setDarkModeItems] = useState<DarkModeItem[]>([
         { id: 1, icon: faSun, isSelected: true },
         { id: 2, icon: faMoon, isSelected: false },
+    ]);
+
+    const [allAreas, setAllAreas] = useState<AreaType[]>([
+        { id: 1, icon: faUsers, name: "All" },
+        { id: 2, icon: faGraduationCap, name: "Study" },
+        { id: 3, icon: faCode, name: "Code" },
     ]);
 
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
@@ -67,6 +81,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 openTimePickerObject: {
                     openTimePickerWindow,
                     setOpenTimePickerWindow,
+                },
+                allAreasObject: {
+                    allAreas,
+                    setAllAreas,
                 },
             }}
         >
