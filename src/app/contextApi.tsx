@@ -30,7 +30,11 @@ const GlobalContext = createContext<GlobalContextType>({
     habitWindowObject: {
         openHabitWindow: false,
         setOpenHabitWindow: () => {},
-    }
+    },
+    openTimePickerObject: {
+        openTimePickerWindow: false,
+        setOpenTimePickerWindow: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -48,6 +52,7 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
     const [isDarkMode, setDarkMode] = useState<boolean>(false);
     const [openHabitWindow, setOpenHabitWindow] = useState<boolean>(false);
+    const [openTimePickerWindow, setOpenTimePickerWindow] = useState<boolean>(false);
 
     return (
         <GlobalContext.Provider
@@ -58,6 +63,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 habitWindowObject: {
                     openHabitWindow,
                     setOpenHabitWindow,
+                },
+                openTimePickerObject: {
+                    openTimePickerWindow,
+                    setOpenTimePickerWindow,
                 },
             }}
         >

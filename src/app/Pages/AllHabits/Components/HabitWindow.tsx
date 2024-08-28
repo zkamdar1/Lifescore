@@ -7,11 +7,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import IconWindow from "./IconsWindow/IconWindow";
 import { icon, IconProp } from "@fortawesome/fontawesome-svg-core";
+import TimerPicker from "./TimerPicker";
 
 type FrequencyType = {
     type: string;
     days: string[];
-    number: number;
+  number: number;
 };
 
 type DayOption = {
@@ -25,6 +26,8 @@ type HabitType = {
     name: string;
     icon: IconProp;
     frequency: FrequencyType[];
+    notificationTime: string;
+    isNotificatonOn: boolean;
 };
 
 type RepeatOption = {
@@ -41,6 +44,8 @@ function HabitWindow() {
         name: "",
         icon: faQuestion,
         frequency: [{ type: "Daily", days: ["M"], number: 1}],
+        notificationTime: "",
+        isNotificatonOn: false,
     });
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
@@ -82,6 +87,13 @@ function HabitWindow() {
 
         setHabitItem(copyHabitsItem);
     }
+  
+    function updateReminderTime(timeValue: string) {
+      const copyHabitItem = { ...habitItem };
+      copyHabitItem.notificationTime = timeValue;
+
+      setHabitItem(copyHabitItem);
+    }
 
     useEffect(() => {
         const copyHabitItem = { ...habitItem };
@@ -96,6 +108,7 @@ function HabitWindow() {
             }}
             className={`top-[3%] left-1/2 transform -translate-x-1/2 w-[80%] z-50 p-10 rounded-md shadow-md ${openHabitWindow ? "absolute" : "hidden"}`}
         >
+            <TimerPicker onSaveTime={updateReminderTime}/>
             <IconWindow
                 openIconWindow={openIconWindow}
                 setOpenIconWindow={setOpenIconWindow}
@@ -114,7 +127,7 @@ function HabitWindow() {
                 onChangeDayOption={changeDaysOption}
                 onChangeWeeksOption={changeWeeksOption}
             />
-            <Reminder />
+            <Reminder habitItem={habitItem} setHabitItem={setHabitItem} />
             <SaveButton habit={habitItem} />
         </div>
     );
@@ -340,7 +353,7 @@ function DailyOptions({
     return (
         <div className="mt-5 flex flex-col gap-4">
             <span className="font-medium opacity-85">On These Days</span>
-            <div className="flex gap-3 w-full">
+            <div className="flex gap-3 w-full flex-wrap">
                 {allDays.map((singleDay, singleDayIndex) => (
                     <span
                         onClick={() => selectedDays(singleDayIndex)}
@@ -430,13 +443,27 @@ function WeeklyOption({
     );
 }
 
-function Reminder() {
-    const { darkModeObject } = useGlobalContextProvider();
+function Reminder({
+  habitItem,
+  setHabitItem,
+}: {
+  habitItem: HabitType;
+  setHabitItem: React.Dispatch<React.SetStateAction<HabitType>>;
+}) {
+    const { darkModeObject, openTimePickerObject } = useGlobalContextProvider();
+    const { setOpenTimePickerWindow } = openTimePickerObject;
     const { isDarkMode } = darkModeObject;
     const [isOn, setIsOn] = useState(false);
 
     function updateToggle() {
-        setIsOn(!isOn);
+      const copyHabitItem = { ...habitItem };
+      copyHabitItem.isNotificatonOn = !isOn;
+      setHabitItem(copyHabitItem);
+      setIsOn(!isOn);
+    }
+    
+    function openTheTimerPicker() {
+      setOpenTimePickerWindow(true);
     }
 
     return (
@@ -448,6 +475,7 @@ function Reminder() {
 
         {isOn && (
           <div
+            onClick={openTheTimerPicker}
             style={{
               backgroundColor: !isDarkMode
                 ? defaultColor[100]
@@ -456,13 +484,13 @@ function Reminder() {
                 ? defaultColor.default
                 : darkModeColor.textColor,
             }}
-            className="flex justify-between p-4 m-2 mt-8 rounded-md"
+            className="flex justify-between p-4 m-2 mt-8 rounded-md cursor-pointer select-none"
           >
             <span>Select Time</span>
-            <div 
-                className="flex gap-2 items-center justify-center cursor-pointer select-none"
+            <div
+                className="flex gap-2 items-center justify-center"
             >
-               <span>08:00 AM</span>
+               <span>{habitItem.notificationTime !== "" ? habitItem.notificationTime : "None" }</span>
                <FontAwesomeIcon height={12} width={12} icon={faChevronDown}/> 
             </div>
           </div>
