@@ -2,7 +2,7 @@
 
 import { useGlobalContextProvider } from "@/src/app/contextApi";
 import { darkModeColor, defaultColor } from "@/colors";
-import { faClose, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faClose, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import IconWindow from "./IconsWindow/IconWindow";
@@ -11,6 +11,7 @@ import { icon, IconProp } from "@fortawesome/fontawesome-svg-core";
 type FrequencyType = {
     type: string;
     days: string[];
+    number: number;
 };
 
 type DayOption = {
@@ -39,7 +40,7 @@ function HabitWindow() {
         _id: "",
         name: "",
         icon: faQuestion,
-        frequency: [{ type: "Daily", days: ["M"] }],
+        frequency: [{ type: "Daily", days: ["M"], number: 1}],
     });
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
@@ -75,6 +76,13 @@ function HabitWindow() {
         setHabitItem(copyHabitsItem);
     }
 
+    function changeWeeksOption(weeks: number) {
+        const copyHabitsItem = { ...habitItem };
+        copyHabitsItem.frequency[0].number = weeks;
+
+        setHabitItem(copyHabitsItem);
+    }
+
     useEffect(() => {
         const copyHabitItem = { ...habitItem };
         copyHabitItem.icon = iconSelected;
@@ -104,7 +112,9 @@ function HabitWindow() {
             <Repeat
                 onChangeOption={changeRepeatOption}
                 onChangeDayOption={changeDaysOption}
+                onChangeWeeksOption={changeWeeksOption}
             />
+            <Reminder />
             <SaveButton habit={habitItem} />
         </div>
     );
@@ -205,79 +215,98 @@ function SaveButton({ habit }: { habit: HabitType }) {
 }
 
 function Repeat({
-    onChangeOption,
-    onChangeDayOption,
+  onChangeOption,
+  onChangeDayOption,
+  onChangeWeeksOption,
 }: {
-        onChangeOption: (repeatOptions: RepeatOption[]) => void;
-        onChangeDayOption: (allDays: DayOption[]) => void;
+  onChangeOption: (repeatOptions: RepeatOption[]) => void;
+  onChangeDayOption: (allDays: DayOption[]) => void;
+  onChangeWeeksOption: (weeks: number) => void;
 }) {
-    const [repeatOptions, setRepeatOptions] = useState<RepeatOption[]>([
-        { name: "Daily", isSelected: true },
-        { name: "Weekly", isSelected: false },
-    ]);
+  const [repeatOptions, setRepeatOptions] = useState<RepeatOption[]>([
+    { name: "Daily", isSelected: true },
+    { name: "Weekly", isSelected: false },
+  ]);
 
-    const days: DayOption[] = [
-      { id: 1, name: "M", isSelected: true },
-      { id: 2, name: "T", isSelected: false },
-      { id: 3, name: "W", isSelected: false },
-      { id: 4, name: "Th", isSelected: false },
-      { id: 5, name: "F", isSelected: false },
-      { id: 6, name: "S", isSelected: false },
-      { id: 7, name: "S", isSelected: false },
-    ];
+  const days: DayOption[] = [
+    { id: 1, name: "M", isSelected: true },
+    { id: 2, name: "T", isSelected: false },
+    { id: 3, name: "W", isSelected: false },
+    { id: 4, name: "Th", isSelected: false },
+    { id: 5, name: "F", isSelected: false },
+    { id: 6, name: "S", isSelected: false },
+    { id: 7, name: "S", isSelected: false },
+  ];
 
-    const [allDays, setAllDays] = useState<DayOption[]>(days);
+  const [allDays, setAllDays] = useState<DayOption[]>(days);
+  const [weeks, setWeeks] = useState(1);
+  const { darkModeObject } = useGlobalContextProvider();
+  const { isDarkMode } = darkModeObject;
+  const [nameOfSelectedOption, setNameofSelectedOption] = useState("");
 
-    const { darkModeObject } = useGlobalContextProvider();
-    const { isDarkMode } = darkModeObject;
+  function changeOption(indexClicked: number) {
+    const updateRepeatOption = repeatOptions.map((singleOption, index) => {
+      if (index === indexClicked) {
+        return { ...singleOption, isSelected: true };
+      }
 
-    function changeOption(indexClicked: number) {
-        const updateRepeatOption = repeatOptions.map((singleOption, index) => {
-            if (index === indexClicked) {
-                return { ...singleOption, isSelected: true };
-            }
+      return { ...singleOption, isSelected: false };
+    });
 
-            return { ...singleOption, isSelected: false };
-        });
+    setRepeatOptions(updateRepeatOption);
+    onChangeOption(updateRepeatOption);
+  }
 
-        setRepeatOptions(updateRepeatOption);
-        onChangeOption(updateRepeatOption);
-    }
+  useEffect(() => {
+    onChangeDayOption(allDays);
+  }, [allDays]);
 
-    useEffect(() => {
-        onChangeDayOption(allDays);
-    }, [allDays]);
+  useEffect(() => {
+    onChangeWeeksOption(weeks);
+  }, [weeks]);
+    
+  useEffect(() => {
+    const getNameOptionSelected = repeatOptions.filter(
+        (singleOption) => singleOption.isSelected
+    )[0].name;
+      
+    setNameofSelectedOption(getNameOptionSelected);
+  }, [repeatOptions]);
 
-    return (
-      <div className="flex flex-col gap-2 mt-10 px-3">
-        <span className="font-semibold text-[17px]">Repeat</span>
+  return (
+    <div className="flex flex-col gap-2 mt-10 px-3">
+      <span className="font-semibold text-[17px]">Repeat</span>
 
-        <div className="flex gap-4 mt-2 items-center">
-          {repeatOptions.map((singleOption, index) => (
-            <button
-              key={index}
-              onClick={() => changeOption(index)}
-              style={{
-                  color: !singleOption.isSelected
-                      ? !isDarkMode
-                        ? defaultColor.default
-                        : darkModeColor.textColor
-                      : "",
-                  backgroundColor: singleOption.isSelected
-                      ? defaultColor.default
-                      : !isDarkMode
-                      ? defaultColor[100]
-                      : defaultColor[50]
-              }}
-              className="p-2 px-3 rounded-md text-white cursor-pointer"
-            >
-              {singleOption.name}
-            </button>
-          ))}
-        </div>
-        <DailyOptions allDays={allDays} setAllDays={setAllDays} />
+      <div className="flex gap-4 mt-2 items-center">
+        {repeatOptions.map((singleOption, index) => (
+          <button
+            key={index}
+            onClick={() => changeOption(index)}
+            style={{
+              color: !singleOption.isSelected
+                ? !isDarkMode
+                  ? defaultColor.default
+                  : darkModeColor.textColor
+                : "",
+              backgroundColor: singleOption.isSelected
+                ? defaultColor.default
+                : !isDarkMode
+                ? defaultColor[100]
+                : defaultColor[50],
+            }}
+            className="p-2 px-3 rounded-md text-white cursor-pointer"
+          >
+            {singleOption.name}
+          </button>
+        ))}
       </div>
-    );
+      {nameOfSelectedOption === "Daily" ? (
+        <DailyOptions allDays={allDays} setAllDays={setAllDays} />
+      ) : (
+        <WeeklyOption weeks={weeks} setWeeks={setWeeks} />
+      )}
+    </div>
+  );
 }
 
 function DailyOptions({
@@ -336,4 +365,126 @@ function DailyOptions({
             </div>
         </div>
     );
+}
+
+function WeeklyOption({
+    weeks,
+    setWeeks,
+}: {
+     weeks: number;
+    setWeeks: React.Dispatch<React.SetStateAction<number>>;
+}) {
+    const { darkModeObject } = useGlobalContextProvider();
+    const { isDarkMode } = darkModeObject;
+
+    function updateCounter(option: string) {
+        if (option === "up") {
+            setWeeks((prev) => (prev < 7 ? prev + 1 : 7));
+        }
+
+        if (option === "down") {
+            setWeeks((prev) => (prev > 1 ? prev - 1 : 1))
+                ;        }
+    }
+
+    return (
+      <div className="mt-7 flex gap-20">
+        <div className="flex flex-col gap-2">
+          <span className="font-semibold">Frequency</span>
+          <span className="text-sm font-light text-gray-400">
+            {weeks} times a week
+          </span>
+        </div>
+        <div className="flex items-center justify-center">
+          <button
+            onClick={() => updateCounter("down")}
+            style={{
+              backgroundColor: !isDarkMode
+                ? defaultColor[100]
+                : defaultColor[50],
+              color: !isDarkMode
+                ? defaultColor.default
+                : darkModeColor.textColor,
+            }}
+            className="p-3 w-10 rounded-md text-white"
+          >
+            -
+          </button>
+          <span className="p-4 px-5 select-none">{weeks}</span>
+          <button
+                onClick={() => updateCounter("up")}
+                style={{
+                backgroundColor: !isDarkMode
+                    ? defaultColor[100]
+                    : defaultColor[50],
+                color: !isDarkMode
+                    ? defaultColor.default
+                    : darkModeColor.textColor,
+                }}
+                className="p-3 w-10 rounded-md text-white"
+                >
+                    +
+          </button>
+        </div>
+      </div>
+    );
+}
+
+function Reminder() {
+    const { darkModeObject } = useGlobalContextProvider();
+    const { isDarkMode } = darkModeObject;
+    const [isOn, setIsOn] = useState(false);
+
+    function updateToggle() {
+        setIsOn(!isOn);
+    }
+
+    return (
+      <div className="flex flex-col gap-2 mt-10 px-3">
+        <div className="flex justify-between">
+          <span className="font-semibold text-[17px]"> Daily Notification</span>
+          <ToggleSwitch />
+        </div>
+
+        {isOn && (
+          <div
+            style={{
+              backgroundColor: !isDarkMode
+                ? defaultColor[100]
+                : defaultColor[50],
+              color: !isDarkMode
+                ? defaultColor.default
+                : darkModeColor.textColor,
+            }}
+            className="flex justify-between p-4 m-2 mt-8 rounded-md"
+          >
+            <span>Select Time</span>
+            <div 
+                className="flex gap-2 items-center justify-center cursor-pointer select-none"
+            >
+               <span>08:00 AM</span>
+               <FontAwesomeIcon height={12} width={12} icon={faChevronDown}/> 
+            </div>
+          </div>
+        )}
+      </div>
+    );
+
+    function ToggleSwitch() {
+      return (
+        <div
+          onClick={updateToggle}
+          className={`${
+            isOn ? "bg-customRed" : "bg-slate-400"
+          } w-16 h-[30px] relative rounded-lg flex items-center cursor-pointer`}
+        >
+          <div
+            className={`bg-white h-6 w-6 rounded-full absolute transition-transform duration-300 ${
+              isOn ? "translate-x-[38px]" : "translate-x-[2px]"
+            }`}
+            style={{ top: "3px" }}
+          ></div>
+        </div>
+      );
+    }
 }
