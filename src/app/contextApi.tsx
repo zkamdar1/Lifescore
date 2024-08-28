@@ -27,6 +27,10 @@ const GlobalContext = createContext<GlobalContextType>({
         darkModeItems: [],
         setDarkModeItems: () => {},
     },
+    habitWindowObject: {
+        openHabitWindow: false,
+        setOpenHabitWindow: () => {},
+    }
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -41,8 +45,9 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         { id: 2, icon: faMoon, isSelected: false },
     ]);
 
-    const [openSideBar, setOpenSideBar] = useState(false);
-    const [isDarkMode, setDarkMode] = useState(false);
+    const [openSideBar, setOpenSideBar] = useState<boolean>(false);
+    const [isDarkMode, setDarkMode] = useState<boolean>(false);
+    const [openHabitWindow, setOpenHabitWindow] = useState<boolean>(false);
 
     return (
         <GlobalContext.Provider
@@ -50,7 +55,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 menuItemObject: { menuItems, setMenuItems },
                 openSideBarObject: { openSideBar, setOpenSideBar },
                 darkModeObject: { isDarkMode, setDarkMode, darkModeItems, setDarkModeItems },
-                
+                habitWindowObject: {
+                    openHabitWindow,
+                    setOpenHabitWindow,
+                },
             }}
         >
             {children}

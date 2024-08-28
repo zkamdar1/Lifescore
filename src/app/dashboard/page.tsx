@@ -60,11 +60,12 @@ function Dashboard() {
 export default Dashboard;
 
 function BlackSoftLayer() {
-    const { openSideBarObject } = useGlobalContextProvider();
-    const { openSideBar, setOpenSideBar } = openSideBarObject;
+    const { openSideBarObject, habitWindowObject } = useGlobalContextProvider();
+  const { openSideBar, setOpenSideBar } = openSideBarObject;
+  const { openHabitWindow } = habitWindowObject;
     return (
         <div
-            className={`w-full h-full bg-black fixed top-0 left-0 opacity-20 z-40 ${openSideBar ? "fixed" : "hidden"}`}
+            className={`w-full h-full bg-black fixed top-0 left-0 opacity-20 z-40 ${openSideBar || openHabitWindow ? "fixed" : "hidden"}`}
         >
         </div>
     );
