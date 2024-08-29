@@ -47,7 +47,7 @@ export default function TagsContainer() {
                   ? darkModeColor.background
                   : defaultColor.background,
               }}
-            className="p-5 rounded-md flex gap-3 items-center transition-all mt-5 text-sm"
+            className="p-5 rounded-md flex gap-3 items-center mt-5 text-sm"
         >
             {allAreas.map((tag: AreaType, index) => (
                 <div

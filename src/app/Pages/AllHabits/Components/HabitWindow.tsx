@@ -12,16 +12,14 @@ import HabitWindowTag from "./HabitWindow/HabitWindowTags";
 import { AreaType, FrequencyType, HabitType, DayOption, RepeatOption } from "@/src/app/Types/GlobalTypes";
 import { addNewHabit } from "@/src/app/utils/allHabitsUtils/addNewHabit";
 import toast from "react-hot-toast";
-
-
-
+import { v4 as uuidv4 } from "uuid"; 
 
 function HabitWindow() {
     const { habitWindowObject, darkModeObject } = useGlobalContextProvider();
     const { openHabitWindow } = habitWindowObject;
     const { isDarkMode } = darkModeObject;
     const [ habitItem, setHabitItem ] = useState<HabitType>({
-        _id: "",
+        _id: uuidv4(),
         name: "",
         icon: faQuestion,
         frequency: [{ type: "Daily", days: ["Mo"], number: 1}],
@@ -93,7 +91,7 @@ function HabitWindow() {
     useEffect(() => {
       if (openHabitWindow) {
         setHabitItem({
-          _id: "",
+          _id: uuidv4(),
           name: "",
           icon: faChevronDown,
           frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
@@ -353,8 +351,9 @@ function DailyOptions({
     allDays: DayOption[];
     setAllDays: React.Dispatch<React.SetStateAction<DayOption[]>>;
     }) {
-    const { darkModeObject } = useGlobalContextProvider();
+    const { darkModeObject, habitWindowObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
+    const {openHabitWindow } = habitWindowObject;
 
     function selectedDays(singleDayIndex: number) {
         const selectedCount: number = allDays.filter(
@@ -373,6 +372,16 @@ function DailyOptions({
 
         setAllDays(updateAllDays);
     }
+  
+    useEffect(() => {
+      if (openHabitWindow) {
+        const updateSelectedDays = allDays.map((singleDay) => {
+          return { ...singleDay, isSelected: false };
+        })
+        updateSelectedDays[0].isSelected = true;
+        setAllDays(updateSelectedDays);
+      }
+    }, [openHabitWindow]);
 
     return (
         <div className="mt-5 flex flex-col gap-4">

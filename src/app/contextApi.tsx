@@ -18,6 +18,7 @@ import { AreaType, HabitType } from "./Types/GlobalTypes";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { textToIcon } from "./Pages/AllHabits/Components/IconsWindow/IconData";
 import { getDateString } from "./utils/allHabitsUtils/DateFunction";
+import { v4 as uuidv4 } from "uuid"; 
 
 const GlobalContext = createContext<GlobalContextType>({
     menuItemObject: {
@@ -79,9 +80,9 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     ]);
 
     const [allAreas, setAllAreas] = useState<AreaType[]>([
-        { _id: 1, icon: faUsers, name: "All" },
-        { _id: 2, icon: faGraduationCap, name: "Study" },
-        { _id: 3, icon: faCode, name: "Code" },
+      { _id: uuidv4(), icon: faUsers, name: "All" },
+      { _id: uuidv4(), icon: faGraduationCap, name: "Study" },
+      { _id: uuidv4(), icon: faCode, name: "Code" },
     ]);
 
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
@@ -97,14 +98,14 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         function fetchData() {
             const allHabitsData: HabitType[] = [
                 {
-                    _id: "",
+                    _id: uuidv4(),
                     name: "test habit",
                     icon: textToIcon("tools") as IconProp,
                     frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
                     notificationTime: "",
                     isNotificationOn: false,
-                    areas: [{ _id: 2, icon: faGraduationCap, name: "Study"}],
-                    completedDays: [{ _id: "1", date: "08/29/2024"}],
+                    areas: [{ _id: uuidv4(), icon: faGraduationCap, name: "Study"}],
+                    completedDays: [{ _id: uuidv4(), date: "08/29/2024"}],
                 },
             ];
 

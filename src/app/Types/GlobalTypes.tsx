@@ -2,7 +2,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import React from "react";
 
 export type AreaType = {
-    _id: number;
+    _id: string;
     icon: IconProp;
     name: string;
 };

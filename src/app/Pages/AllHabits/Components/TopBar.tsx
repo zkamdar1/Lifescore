@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import SearchBar from "./SearchBar";
 import DarkMode from "./DarkMode";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { UserButton, UserProfile } from "@clerk/nextjs";
+import { UserButton, UserProfile, useUser } from "@clerk/nextjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useGlobalContextProvider } from "@/src/app/contextApi";
 import { darkModeColor,defaultColor } from "@/colors";
@@ -18,6 +18,7 @@ function TopBar() {
       userButtonPopoverActionButton: "text-purple-600",
     },
   };
+  const { user } = useUser();
 
   function openSideBarFunction() {
     setOpenSideBar(!openSideBar);
@@ -52,7 +53,7 @@ function TopBar() {
         <div className="flex flex-col max-md:hidden">
           <span className="text-xl">
             <span className="font-medium">Hi There</span>
-            <span className="font-light">, Kamdar</span>
+            <span className="font-light">, {user?.firstName}</span>
           </span>
           <span className="font-light text-[14px] text-gray-400">
             welcome back!
