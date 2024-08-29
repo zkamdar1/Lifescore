@@ -9,34 +9,11 @@ import IconWindow from "./IconsWindow/IconWindow";
 import { icon, IconProp } from "@fortawesome/fontawesome-svg-core";
 import TimerPicker from "./TimerPicker";
 import HabitWindowTag from "./HabitWindow/HabitWindowTags";
-import { AreaType } from "@/src/app/Types/GlobalTypes";
+import { AreaType, FrequencyType, HabitType, DayOption, RepeatOption } from "@/src/app/Types/GlobalTypes";
+import { addNewHabit } from "@/src/app/utils/allHabitsUtils/addNewHabit";
 
-type FrequencyType = {
-    type: string;
-    days: string[];
-  number: number;
-};
 
-type DayOption = {
-    id: number;
-    name: string;
-    isSelected: boolean;
-}
 
-type HabitType = {
-    _id: string;
-    name: string;
-    icon: IconProp;
-    frequency: FrequencyType[];
-    notificationTime: string;
-    isNotificatonOn: boolean;
-    areas: AreaType[];
-};
-
-type RepeatOption = {
-    name: string;
-    isSelected: boolean;
-};
 
 function HabitWindow() {
     const { habitWindowObject, darkModeObject } = useGlobalContextProvider();
@@ -48,7 +25,7 @@ function HabitWindow() {
         icon: faQuestion,
         frequency: [{ type: "Daily", days: ["M"], number: 1}],
         notificationTime: "",
-        isNotificatonOn: false,
+        isNotificationOn: false,
         areas: [{id: 0, icon: faQuestion, name: ""}],
     });
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
@@ -224,12 +201,32 @@ function InputNameAndIconButton({
 }
 
 function SaveButton({ habit }: { habit: HabitType }) {
+  const { allHabitsObject, habitWindowObject } = useGlobalContextProvider();
+  const { allHabits, setAllHabits } = allHabitsObject;
+  const { setOpenHabitWindow } = habitWindowObject;
+
+  function checkNewHabitObject() {
+    if (habit.name.trim() === "") {
+      return console.log("The habit name field is still empty!")
+    }
+
+    const habitExists = allHabits.some(
+      (singleHabit) => singleHabit.name === habit.name
+    );
+
+    if (!habitExists) {
+      addNewHabit({ allHabits, setAllHabits, newHabit: habit });
+      setOpenHabitWindow(false);
+      console.log("Habit added succesfully")
+    } else {
+      console.log("Habit already exists")
+    }
+  }
+
     return (
         <div className="w-full flex justify-center mt-9">
             <button
-                onClick={() => {
-                    console.log(habit);
-                }}
+                onClick={checkNewHabitObject}
                 className="bg-customRed p-4 w-[98%] rounded-md text-white"
             >
                 Add a Habit
@@ -468,7 +465,7 @@ function Reminder({
 
     function updateToggle() {
       const copyHabitItem = { ...habitItem };
-      copyHabitItem.isNotificatonOn = !isOn;
+      copyHabitItem.isNotificationOn = !isOn;
       setHabitItem(copyHabitItem);
       setIsOn(!isOn);
     }

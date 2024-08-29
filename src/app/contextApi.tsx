@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, createContext, useState, useContext } from "react";
+import { ReactNode, createContext, useState, useContext, useEffect } from "react";
 import { GlobalContextType } from "./Types/GlobalContextType";
 import { menuItemType } from "./Types/MenuItemType";
 import { DarkModeItem } from "./Types/DarkModeTypes";
@@ -14,7 +14,9 @@ import {
     faGraduationCap,
     faCode,
 } from "@fortawesome/free-solid-svg-icons";
-import { AreaType } from "./Types/GlobalTypes";
+import { AreaType, HabitType } from "./Types/GlobalTypes";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { textToIcon } from "./Pages/AllHabits/Components/IconsWindow/IconData";
 
 const GlobalContext = createContext<GlobalContextType>({
     menuItemObject: {
@@ -43,6 +45,10 @@ const GlobalContext = createContext<GlobalContextType>({
         allAreas: [],
         setAllAreas: () => {},
     },
+    allHabitsObject: {
+        allHabits: [],
+        setAllHabits: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -51,6 +57,8 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         { name: "Statistics", isSelected: false, icon: faChartSimple },
         { name: "Tags", isSelected: false, icon: faLayerGroup },
     ]);
+
+    const [allHabits, setAllHabits] = useState<HabitType[]>([]);
 
     const [darkModeItems, setDarkModeItems] = useState<DarkModeItem[]>([
         { id: 1, icon: faSun, isSelected: true },
@@ -67,6 +75,29 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [isDarkMode, setDarkMode] = useState<boolean>(false);
     const [openHabitWindow, setOpenHabitWindow] = useState<boolean>(false);
     const [openTimePickerWindow, setOpenTimePickerWindow] = useState<boolean>(false);
+
+    useEffect(() => {
+        function fetchData() {
+            const allHabitsData = [
+                {
+                    _id: "",
+                    name: "",
+                    icon: textToIcon("faTools") as IconProp,
+                    frequency: [{ type: "Daily", days: ["M"], number: 1 }],
+                    notificationTime: "",
+                    isNotificationOn: false,
+                    areas: [],
+                },
+            ];
+
+            setTimeout(() => {
+                setAllHabits(allHabitsData);
+            }, 1000);
+        }
+        fetchData();
+    }, []);
+
+    console.log(allHabits);
 
     return (
         <GlobalContext.Provider
@@ -85,6 +116,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 allAreasObject: {
                     allAreas,
                     setAllAreas,
+                },
+                allHabitsObject: {
+                    allHabits,
+                    setAllHabits,
                 },
             }}
         >

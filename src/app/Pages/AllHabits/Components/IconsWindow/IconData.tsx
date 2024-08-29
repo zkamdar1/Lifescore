@@ -75,3 +75,76 @@ export const iconsData: IconData[] = [
   { faIcon: faFeather, isSelected: false },
   { faIcon: faGuitar, isSelected: false },
 ];
+
+export function textToIcon(iconText: string): IconProp | string {
+  switch (iconText.toLowerCase()) {
+    case "coffee":
+      return faCoffee;
+    case "apple":
+      return faAppleAlt;
+    case "carrot":
+      return faCarrot;
+    case "smile":
+      return faSmile;
+    case "anchor":
+      return faAnchor;
+    case "bicycle":
+      return faBicycle;
+    case "book":
+      return faBook;
+    case "camera":
+      return faCamera;
+    case "cloud":
+      return faCloud;
+    case "code":
+      return faCode;
+    case "envelope":
+      return faEnvelope;
+    case "heart":
+      return faHeart;
+    case "home":
+      return faHome;
+    case "key":
+      return faKey;
+    case "laptop":
+      return faLaptop;
+    case "map":
+      return faMap;
+    case "music":
+      return faMusic;
+    case "pencil":
+      return faPencilAlt;
+    case "plane":
+      return faPlane;
+    case "rocket":
+      return faRocket;
+    case "search":
+      return faSearch;
+    case "shoppingcart":
+      return faShoppingCart;
+    case "star":
+      return faStar;
+    case "sun":
+      return faSun;
+    case "trophy":
+      return faTrophy;
+    case "user":
+      return faUser;
+    case "wrench":
+      return faWrench;
+    case "bell":
+      return faBell;
+    case "chartline":
+      return faChartLine;
+    case "chess":
+      return faChess;
+    case "dog":
+      return faDog;
+    case "feather":
+      return faFeather;
+    case "guitar":
+      return faGuitar;
+    default:
+      return "unknown";
+  }
+}

@@ -1,7 +1,7 @@
 import { menuItemType } from "./MenuItemType";
 import { Dispatch, SetStateAction } from "react";
 import { DarkModeItem } from "./DarkModeTypes";
-import { AreaType } from "./GlobalTypes";
+import { AreaType, HabitType } from "./GlobalTypes";
 
 export type GlobalContextType = {
     menuItemObject: {
@@ -29,5 +29,9 @@ export type GlobalContextType = {
     allAreasObject: {
         allAreas: AreaType[];
         setAllAreas: Dispatch<SetStateAction<AreaType[]>>;
+    }
+    allHabitsObject: {
+        allHabits: HabitType[];
+        setAllHabits: Dispatch<SetStateAction<HabitType[]>>;
     }
 };
