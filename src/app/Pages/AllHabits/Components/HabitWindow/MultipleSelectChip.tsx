@@ -121,7 +121,7 @@ export default function MultipleSelectChip({
         >
           {filteredAreas.map((area) => (
             <MenuItem
-                key={area.id}
+                key={area._id}
                 value={area.name}
                 style={getStyles(area.name, selectedAreas, theme)}
             >
