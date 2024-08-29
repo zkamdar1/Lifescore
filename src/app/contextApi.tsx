@@ -17,6 +17,7 @@ import {
 import { AreaType, HabitType } from "./Types/GlobalTypes";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { textToIcon } from "./Pages/AllHabits/Components/IconsWindow/IconData";
+import { getDateString } from "./utils/allHabitsUtils/DateFunction";
 
 const GlobalContext = createContext<GlobalContextType>({
     menuItemObject: {
@@ -49,6 +50,14 @@ const GlobalContext = createContext<GlobalContextType>({
         allHabits: [],
         setAllHabits: () => {},
     },
+    selectedCurrentDayObject: {
+        selectedCurrentDate: "",
+        setSelectedCurrentDate: () => {},
+    },
+    offsetDayObject: {
+        offsetDay: 0,
+        setOffsetDay: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -75,10 +84,13 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [isDarkMode, setDarkMode] = useState<boolean>(false);
     const [openHabitWindow, setOpenHabitWindow] = useState<boolean>(false);
     const [openTimePickerWindow, setOpenTimePickerWindow] = useState<boolean>(false);
+    const [selectedCurrentDate, setSelectedCurrentDate] = useState(() => getDateString(new Date()));
+    const [offsetDay, setOffsetDay] = useState(0);
+
 
     useEffect(() => {
         function fetchData() {
-            const allHabitsData = [
+            const allHabitsData: HabitType[] = [
                 {
                     _id: "",
                     name: "test habit",
@@ -120,6 +132,14 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 allHabitsObject: {
                     allHabits,
                     setAllHabits,
+                },
+                selectedCurrentDayObject: {
+                    selectedCurrentDate,
+                    setSelectedCurrentDate,
+                },
+                offsetDayObject: {
+                    offsetDay,
+                    setOffsetDay,
                 },
             }}
         >
