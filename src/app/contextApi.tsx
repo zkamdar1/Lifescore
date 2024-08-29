@@ -58,6 +58,10 @@ const GlobalContext = createContext<GlobalContextType>({
         offsetDay: 0,
         setOffsetDay: () => {},
     },
+    selectedTagStringObject: {
+        selectedTagString: "",
+        setSelectedTagString: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -75,9 +79,9 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     ]);
 
     const [allAreas, setAllAreas] = useState<AreaType[]>([
-        { id: 1, icon: faUsers, name: "All" },
-        { id: 2, icon: faGraduationCap, name: "Study" },
-        { id: 3, icon: faCode, name: "Code" },
+        { _id: 1, icon: faUsers, name: "All" },
+        { _id: 2, icon: faGraduationCap, name: "Study" },
+        { _id: 3, icon: faCode, name: "Code" },
     ]);
 
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
@@ -86,6 +90,7 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [openTimePickerWindow, setOpenTimePickerWindow] = useState<boolean>(false);
     const [selectedCurrentDate, setSelectedCurrentDate] = useState(() => getDateString(new Date()));
     const [offsetDay, setOffsetDay] = useState(0);
+    const [selectedTagString, setSelectedTagString] = useState<string>("All");
 
 
     useEffect(() => {
@@ -95,10 +100,11 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                     _id: "",
                     name: "test habit",
                     icon: textToIcon("tools") as IconProp,
-                    frequency: [{ type: "Daily", days: ["M"], number: 1 }],
+                    frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
                     notificationTime: "",
                     isNotificationOn: false,
-                    areas: [],
+                    areas: [{ _id: 2, icon: faGraduationCap, name: "Study"}],
+                    completedDays: [{ _id: "1", date: "08/29/2024"}],
                 },
             ];
 
@@ -140,6 +146,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 offsetDayObject: {
                     offsetDay,
                     setOffsetDay,
+                },
+                selectedTagStringObject: {
+                    selectedTagString,
+                    setSelectedTagString,
                 },
             }}
         >

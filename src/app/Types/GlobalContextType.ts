@@ -42,4 +42,8 @@ export type GlobalContextType = {
     offsetDay: number;
     setOffsetDay: Dispatch<SetStateAction<number>>;
   };
+  selectedTagStringObject: {
+    selectedTagString: string;
+    setSelectedTagString: Dispatch<SetStateAction<string>>;
+  };
 };

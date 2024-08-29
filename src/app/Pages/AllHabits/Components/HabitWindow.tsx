@@ -24,10 +24,11 @@ function HabitWindow() {
         _id: "",
         name: "",
         icon: faQuestion,
-        frequency: [{ type: "Daily", days: ["M"], number: 1}],
+        frequency: [{ type: "Daily", days: ["Mo"], number: 1}],
         notificationTime: "",
         isNotificationOn: false,
-        areas: [{id: 0, icon: faQuestion, name: ""}],
+        areas: [],
+        completedDays: [],
     });
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
@@ -88,6 +89,21 @@ function HabitWindow() {
         copyHabitItem.icon = iconSelected;
         setHabitItem(copyHabitItem);
     }, [iconSelected]);
+  
+    useEffect(() => {
+      if (openHabitWindow) {
+        setHabitItem({
+          _id: "",
+          name: "",
+          icon: faChevronDown,
+          frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
+          notificationTime: "",
+          isNotificationOn: false,
+          areas: [],
+          completedDays: [],
+        });
+      }
+    }, [openHabitWindow]);
 
     return (
         <div
@@ -250,13 +266,13 @@ function Repeat({
   ]);
 
   const days: DayOption[] = [
-    { id: 1, name: "M", isSelected: true },
-    { id: 2, name: "T", isSelected: false },
-    { id: 3, name: "W", isSelected: false },
+    { id: 1, name: "Mo", isSelected: true },
+    { id: 2, name: "Tu", isSelected: false },
+    { id: 3, name: "We", isSelected: false },
     { id: 4, name: "Th", isSelected: false },
-    { id: 5, name: "F", isSelected: false },
-    { id: 6, name: "S", isSelected: false },
-    { id: 7, name: "S", isSelected: false },
+    { id: 5, name: "Fr", isSelected: false },
+    { id: 6, name: "Sa", isSelected: false },
+    { id: 7, name: "Su", isSelected: false },
   ];
 
   const [allDays, setAllDays] = useState<DayOption[]>(days);

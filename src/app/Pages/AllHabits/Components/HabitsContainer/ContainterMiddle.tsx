@@ -1,21 +1,50 @@
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Checkbox, IconButton } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { defaultColor, darkModeColor } from "@/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useGlobalContextProvider } from "@/src/app/contextApi";
 import { HabitType } from "@/src/app/Types/GlobalTypes";
+import { getCurrentDayName } from "@/src/app/utils/allHabitsUtils/DateFunction";
 
 export default function ContainerMiddle() {
-  const { allHabitsObject } = useGlobalContextProvider();
+  const { allHabitsObject, selectedCurrentDayObject, selectedTagStringObject } = useGlobalContextProvider();
   const { allHabits } = allHabitsObject;
+  const [allFilteredHabits, setAllFilteredHabits] = useState<HabitType[]>([]);
+  const { selectedCurrentDate } = selectedCurrentDayObject;
+  const { selectedTagString } = selectedTagStringObject;
+
+  useEffect(() => {
+    const getTwoFirstDayLetter = getCurrentDayName(selectedCurrentDate).slice(
+      0,
+      2
+    );
+
+    let filteredHabitsByTag: HabitType[] = [];
+
+    const filteredHabitsByFrequency = allHabits.filter((singleHabit) => {
+      return singleHabit.frequency[0].days.some(
+        (day) => day === getTwoFirstDayLetter
+      );
+    });
+
+    if (selectedTagString != "All") {
+      filteredHabitsByTag = filteredHabitsByFrequency.filter((habit) =>
+        habit.areas.some((area) => area.name === selectedTagString)
+      );
+    } else {
+      filteredHabitsByTag = filteredHabitsByFrequency;
+    }
+
+    setAllFilteredHabits(filteredHabitsByTag);
+  }, [selectedCurrentDate, allHabits, selectedTagString]);
 
     return (
       <div className="p-3">
-        {allHabits.map((singleHabit, singleHabitIndex) => (
+        {allFilteredHabits.map((singleHabit, singleHabitIndex) => (
           <div key={singleHabitIndex}>
             <HabitCard singleHabit={singleHabit} />
           </div>

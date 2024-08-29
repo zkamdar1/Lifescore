@@ -2,7 +2,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import React from "react";
 
 export type AreaType = {
-    id: number;
+    _id: number;
     icon: IconProp;
     name: string;
 };
@@ -13,6 +13,11 @@ export type FrequencyType = {
   number: number;
 };
 
+export type CompleteDaysType = {
+  _id: string,
+  date: string,
+};
+
 export type HabitType = {
   _id: string;
   name: string;
@@ -21,6 +26,7 @@ export type HabitType = {
   notificationTime: string;
   isNotificationOn: boolean;
   areas: AreaType[];
+  completedDays: CompleteDaysType[];
 };
 
 export type DayOption = {
