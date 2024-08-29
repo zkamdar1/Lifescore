@@ -46,4 +46,8 @@ export type GlobalContextType = {
     selectedTagString: string;
     setSelectedTagString: Dispatch<SetStateAction<string>>;
   };
+  allFilteredHabitsObject: {
+    allFilteredHabits: HabitType[];
+    setAllFilteredHabits: Dispatch<SetStateAction<HabitType[]>>;
+  }
 };

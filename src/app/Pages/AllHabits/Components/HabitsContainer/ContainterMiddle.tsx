@@ -1,21 +1,16 @@
-import { faCode } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Checkbox, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { defaultColor, darkModeColor } from "@/colors";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useGlobalContextProvider } from "@/src/app/contextApi";
 import { HabitType } from "@/src/app/Types/GlobalTypes";
 import { getCurrentDayName } from "@/src/app/utils/allHabitsUtils/DateFunction";
 import EmptyHabitsPlaceHolder from "@/src/app/EmptyPlaceHolders/HabitsEmptyPlaceHolder";
-import { v4 as uuidv4 } from "uuid"; 
+import HabitCard from "../SingleHabitCard";
+import { SuccessIcon } from "@/src/app/assets/SuccessIcon";
 
 export default function ContainerMiddle() {
-  const { allHabitsObject, selectedCurrentDayObject, selectedTagStringObject } = useGlobalContextProvider();
+  const { allHabitsObject, selectedCurrentDayObject, selectedTagStringObject, allFilteredHabitsObject } = useGlobalContextProvider();
   const { allHabits } = allHabitsObject;
-  const [allFilteredHabits, setAllFilteredHabits] = useState<HabitType[]>([]);
+  const { allFilteredHabits, setAllFilteredHabits } = allFilteredHabitsObject;
   const { selectedCurrentDate } = selectedCurrentDayObject;
   const { selectedTagString } = selectedTagStringObject;
 
@@ -44,146 +39,37 @@ export default function ContainerMiddle() {
     setAllFilteredHabits(filteredHabitsByTag);
   }, [selectedCurrentDate, allHabits, selectedTagString]);
 
+  const isAllHabitsCompleted =
+    allFilteredHabits.length > 0 &&
+    allFilteredHabits.every((habit) => {
+      return habit.completedDays.some(
+        (day) => day.date === selectedCurrentDate
+      );
+    });
+
   return (
     <div className="p-3">
       {allFilteredHabits.length === 0 ? (
         <EmptyHabitsPlaceHolder />
       ) : (
           <>
+            {isAllHabitsCompleted && (
+              <div className="flex justify-center items-center p-5 flex-col">
+                <SuccessIcon color={defaultColor[50]} />
+                <span className="text-[13px] text-gray-400 w-64 text-center mt-6">
+                  {`Great job! You've completed all your habits for today! `}
+                </span>
+              </div>
+            )}
             {allFilteredHabits.map((singleHabit, singleHabitIndex) => (
               <div key={singleHabitIndex}>
-                <HabitCard singleHabit={singleHabit} />
+                {singleHabit.completedDays.some(
+                  (day) => day.date === selectedCurrentDate
+                ) === false && <HabitCard singleHabit={singleHabit} />}
               </div>
             ))}
           </>
       )}
     </div>
   );
-
-  function HabitCard({ singleHabit }: { singleHabit: HabitType}) {
-      const { darkModeObject, allHabitsObject, selectedCurrentDayObject } = useGlobalContextProvider();
-      const { isDarkMode } = darkModeObject;
-      const { setAllHabits} = allHabitsObject;
-      const {selectedCurrentDate} = selectedCurrentDayObject;
-      
-      const [checked, setChecked] = useState(
-        singleHabit.completedDays.some((day) => day.date === selectedCurrentDate)
-      );
-    
-      function handleClickedCheckbox(event: React.ChangeEvent<HTMLInputElement>) {
-        const checked = event.target.checked;
-        setChecked(checked);
-
-        if (checked) {
-          checkHabit();
-        } else {
-          uncheckTheHabit();
-        }
-      }
-    
-      function checkHabit() {
-        const completedDay = {
-          _id: uuidv4(),
-          date: selectedCurrentDate,
-        };
-
-        const updatedHabits: HabitType = {
-          ...singleHabit,
-          completedDays: [...singleHabit.completedDays, completedDay],
-        };
-
-        const updateAllHabits: HabitType[] = allHabits.map((habit) => {
-          if (habit._id === updatedHabits._id) {
-            return updatedHabits;
-          } else {
-            return habit;
-          }
-        });
-        setAllHabits(updateAllHabits);
-      }
-    
-      function uncheckTheHabit() {
-        const updatedHabits: HabitType = {
-          ...singleHabit,
-          completedDays: singleHabit.completedDays.filter(
-            (day) => day.date !== selectedCurrentDate
-          ),
-        };
-
-        const updateAllHabits: HabitType[] = allHabits.map((habit) => {
-          if (habit._id === updatedHabits._id) {
-              return updatedHabits;
-            } else {
-              return habit;
-            }
-          });
-          setAllHabits(updateAllHabits);
-        }
-
-        return (
-          <div className="flex p-3 items-center justify-between">
-            <Checkbox
-              icon={<RadioButtonUncheckedIcon />}
-              checkedIcon={<CheckCircleIcon />}
-              checked={checked}
-              onChange={handleClickedCheckbox}
-              sx={{
-                color: defaultColor.default,
-                "&.Mui-checked": {
-                  color: defaultColor.default,
-                },
-              }}
-            />
-
-            <div
-              style={{
-                backgroundColor: isDarkMode
-                  ? darkModeColor.backgroundSlate
-                  : defaultColor.backgroundSlate,
-              }}
-              className="flex justify-between gap-2 w-full p-3 py-4 rounded-lg"
-            >
-              <div className="w-full">
-                {/* Divs for icon & name of habit */}
-                <div className="flex gap-2 justify-between">
-                  <div className="flex gap-2 items-center">
-                    <FontAwesomeIcon
-                      className="p-3 rounded-full w-4 h-4 bg-customRed text-white"
-                      height={20}
-                      width={20}
-                      icon={singleHabit.icon}
-                    />
-                    <span className="">{singleHabit.name}</span>
-                  </div>
-                </div>
-                {/* Divs for the tags */}
-                <div className="flex gap-2 mt-3">
-                  {singleHabit.areas.map((singleArea, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        color: isDarkMode
-                          ? darkModeColor.textColor
-                          : defaultColor.default,
-                        backgroundColor: isDarkMode
-                          ? defaultColor[50]
-                          : defaultColor[100],
-                      }}
-                      className="p-1 text-[12px] rounded-md px-2"
-                    >
-                      <span className="">{singleArea.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {/* Div for three dot button */}
-              <div className="w-10 flex item-center justify-center">
-                <IconButton>
-                  <MoreVertIcon sx={{ color: isDarkMode ? "white" : "gray" }} />
-                </IconButton>
-              </div>
-            </div>
-          </div>
-        );
-    }
 }

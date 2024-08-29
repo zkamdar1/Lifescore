@@ -63,6 +63,10 @@ const GlobalContext = createContext<GlobalContextType>({
         selectedTagString: "",
         setSelectedTagString: () => {},
     },
+    allFilteredHabitsObject: {
+        allFilteredHabits: [],
+        setAllFilteredHabits: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -92,6 +96,7 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [selectedCurrentDate, setSelectedCurrentDate] = useState(() => getDateString(new Date()));
     const [offsetDay, setOffsetDay] = useState(0);
     const [selectedTagString, setSelectedTagString] = useState<string>("All");
+    const [allFilteredHabits, setAllFilteredHabits] = useState<HabitType[]>([]);
 
 
     useEffect(() => {
@@ -151,6 +156,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 selectedTagStringObject: {
                     selectedTagString,
                     setSelectedTagString,
+                },
+                allFilteredHabitsObject: {
+                    allFilteredHabits,
+                    setAllFilteredHabits,
                 },
             }}
         >
