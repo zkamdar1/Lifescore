@@ -11,6 +11,7 @@ import TimerPicker from "./TimerPicker";
 import HabitWindowTag from "./HabitWindow/HabitWindowTags";
 import { AreaType, FrequencyType, HabitType, DayOption, RepeatOption } from "@/src/app/Types/GlobalTypes";
 import { addNewHabit } from "@/src/app/utils/allHabitsUtils/addNewHabit";
+import toast from "react-hot-toast";
 
 
 
@@ -207,7 +208,7 @@ function SaveButton({ habit }: { habit: HabitType }) {
 
   function checkNewHabitObject() {
     if (habit.name.trim() === "") {
-      return console.log("The habit name field is still empty!")
+      return toast.error("The habit name field is still empty!");
     }
 
     const habitExists = allHabits.some(
@@ -217,9 +218,8 @@ function SaveButton({ habit }: { habit: HabitType }) {
     if (!habitExists) {
       addNewHabit({ allHabits, setAllHabits, newHabit: habit });
       setOpenHabitWindow(false);
-      console.log("Habit added succesfully")
     } else {
-      console.log("Habit already exists")
+      toast.error("Habit already exists");
     }
   }
 

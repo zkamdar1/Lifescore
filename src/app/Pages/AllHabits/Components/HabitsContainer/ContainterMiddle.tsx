@@ -7,20 +7,25 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { defaultColor, darkModeColor } from "@/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useGlobalContextProvider } from "@/src/app/contextApi";
+import { HabitType } from "@/src/app/Types/GlobalTypes";
 
 export default function ContainerMiddle() {
+  const { allHabitsObject } = useGlobalContextProvider();
+  const { allHabits } = allHabitsObject;
+
     return (
-      <div>
-        <HabitCard />
-        <HabitCard />
-        <HabitCard />
+      <div className="p-3">
+        {allHabits.map((singleHabit, singleHabitIndex) => (
+          <div key={singleHabitIndex}>
+            <HabitCard singleHabit={singleHabit} />
+          </div>
+        ))}
       </div>
     );
 
-  function HabitCard() {
+  function HabitCard({ singleHabit }: { singleHabit: HabitType}) {
       const { darkModeObject } = useGlobalContextProvider();
-      const { isDarkMode, setDarkMode, darkModeItems, setDarkModeItems } =
-        darkModeObject;
+      const { isDarkMode } = darkModeObject;
         return (
           <div className="flex p-3 items-center justify-between">
             <Checkbox
@@ -40,7 +45,7 @@ export default function ContainerMiddle() {
                   ? darkModeColor.backgroundSlate
                   : defaultColor.backgroundSlate,
               }}
-              className="flex justify-between gap-2 w-full p-3 py-4 rounded-lg bg-slate-50"
+              className="flex justify-between gap-2 w-full p-3 py-4 rounded-lg"
             >
               <div className="w-full">
                 {/* Divs for icon & name of habit */}
@@ -50,46 +55,35 @@ export default function ContainerMiddle() {
                       className="p-3 rounded-full w-4 h-4 bg-customRed text-white"
                       height={20}
                       width={20}
-                      icon={faCode}
+                      icon={singleHabit.icon}
                     />
-                    <span className="">Coding</span>
+                    <span className="">{singleHabit.name}</span>
                   </div>
                 </div>
                 {/* Divs for the tags */}
                 <div className="flex gap-2 mt-3">
-                  <div
-                    style={{
-                      color: isDarkMode
-                        ? darkModeColor.textColor
-                        : defaultColor.default,
-                      backgroundColor: isDarkMode
-                        ? defaultColor[50]
-                        : defaultColor[100],
-                    }}
-                    className="p-1 text-[12px] rounded-md px-2"
-                  >
-                    <span className="">Area1</span>
-                  </div>
-
-                  <div
-                    style={{
-                      color: isDarkMode
-                        ? darkModeColor.textColor
-                        : defaultColor.default,
-                      backgroundColor: isDarkMode
-                        ? defaultColor[50]
-                        : defaultColor[100],
-                    }}
-                    className="p-1 text-[12px] rounded-md px-2"
-                  >
-                    <span className="">Area2</span>
-                  </div>
+                  {singleHabit.areas.map((singleArea, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        color: isDarkMode
+                          ? darkModeColor.textColor
+                          : defaultColor.default,
+                        backgroundColor: isDarkMode
+                          ? defaultColor[50]
+                          : defaultColor[100],
+                      }}
+                      className="p-1 text-[12px] rounded-md px-2"
+                    >
+                      <span className="">{singleArea.name}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
               {/* Div for three dot button */}
               <div className="w-10 flex item-center justify-center">
                 <IconButton>
-                  <MoreVertIcon sx={{color: isDarkMode ? "white" : 'gray'}} />
+                  <MoreVertIcon sx={{ color: isDarkMode ? "white" : "gray" }} />
                 </IconButton>
               </div>
             </div>

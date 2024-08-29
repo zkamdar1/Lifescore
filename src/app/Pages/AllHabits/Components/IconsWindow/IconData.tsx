@@ -33,6 +33,7 @@ import {
   faDog,
   faFeather,
   faGuitar,
+  faTools,
 } from "@fortawesome/free-solid-svg-icons"; 
 
 type IconData = {
@@ -74,6 +75,7 @@ export const iconsData: IconData[] = [
   { faIcon: faDog, isSelected: false },
   { faIcon: faFeather, isSelected: false },
   { faIcon: faGuitar, isSelected: false },
+  { faIcon: faTools, isSelected: false },
 ];
 
 export function textToIcon(iconText: string): IconProp | string {
@@ -144,6 +146,8 @@ export function textToIcon(iconText: string): IconProp | string {
       return faFeather;
     case "guitar":
       return faGuitar;
+    case "tools":
+      return faTools;
     default:
       return "unknown";
   }

@@ -81,8 +81,8 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
             const allHabitsData = [
                 {
                     _id: "",
-                    name: "",
-                    icon: textToIcon("faTools") as IconProp,
+                    name: "test habit",
+                    icon: textToIcon("tools") as IconProp,
                     frequency: [{ type: "Daily", days: ["M"], number: 1 }],
                     notificationTime: "",
                     isNotificationOn: false,
