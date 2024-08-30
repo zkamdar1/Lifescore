@@ -21,7 +21,7 @@ export type CompleteDaysType = {
 export type HabitType = {
   _id?: string;
   name: string;
-  icon: IconProp;
+  icon: any;
   clerkUserId: string;
   frequency: FrequencyType[];
   notificationTime: string;

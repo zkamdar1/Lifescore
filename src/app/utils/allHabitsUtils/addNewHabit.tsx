@@ -3,6 +3,7 @@ import { HabitType } from "../../Types/GlobalTypes";
 import { Dispatch, SetStateAction } from "react";
 import { iconToText } from "../../Pages/AllHabits/Components/IconsWindow/IconData";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import scheduleNotification from "../../notifFunction";
 
 export async function addNewHabit({
     allHabits,
@@ -39,6 +40,14 @@ export async function addNewHabit({
         const { _id } = data.habit;
         const updatedIdOfHabit = { ...habit, _id: _id };
         setAllHabits([...allHabits, updatedIdOfHabit]);
+
+        if (updatedIdOfHabit.isNotificationOn) {
+            scheduleNotification(
+                updatedHabit.notificationTime,
+                updatedHabit.frequency[0].days,
+                updatedHabit.name
+            );
+        }
         toast.success("Habit added successfully!")
     } catch (error) {
         toast.error("Something went wrong...")

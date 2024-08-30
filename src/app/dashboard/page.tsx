@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import Sidebar from "../Components/SideBar/Sidebar";
 import { useGlobalContextProvider } from "../contextApi";
@@ -12,6 +12,17 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { defaultColor, darkModeColor } from "@/colors";
 
+export function sendNotifications(habitName: string) {
+  if ("Notification" in window && Notification.permission === "granted") {
+    const notification = new Notification("LifeScore", {
+      body: `It's time to do your habit: ${habitName}`,
+    });
+
+    setTimeout(() => {
+      notification.close();
+    }, 5000);
+  }
+}
 
 function Dashboard() {
     const { darkModeObject } = useGlobalContextProvider();
@@ -21,6 +32,24 @@ function Dashboard() {
     const [selectedMenu, setSelectedMenu] = useState<menuItemType | null>(null);
     let selectComponent = null;
 
+    const requestPermission = useCallback(() => {
+      if ("Notification" in window) {
+        Notification.requestPermission().then(function (permission) {
+          if (permission === "granted") {
+            console.log("Permission is granted");
+          }
+        });
+      }
+    }, []);
+
+    useEffect(() => {
+      console.log("requesting permission");
+      
+      if("Notification" in window) {
+        requestPermission();
+      }
+    }, [requestPermission]);
+  
     useEffect(() => {
         menuItems.map((singleItem) => {
             if (singleItem.isSelected) {

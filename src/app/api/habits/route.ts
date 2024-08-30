@@ -48,3 +48,74 @@ export async function GET(req: any) {
         return NextResponse.json({ error: error }, { status: 400 });
     }
 }
+
+export async function DELETE(request: any) {
+    try {
+        const { habitId } = await request.json()
+        
+        const habitToDelete = await HabitsCollection.findOneAndDelete({
+            _id: habitId,
+        });
+
+        if (!habitToDelete) {
+            return NextResponse.json({ message: "habit not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: "Habit deleted successfully" });
+    } catch (error) {
+        return NextResponse.json({ message: error })
+    }
+}
+
+export async function PUT(request: any) {
+    try {
+        const habitId = request.nextUrl.searchParams.get("habitId");
+        const {
+            name,
+            icon,
+            frequency,
+            notificationTime,
+            isNotificationOn,
+            areas,
+            completedDays,
+        } = await request.json();
+
+        if (!habitId) {
+            return NextResponse.json(
+                { message: "Habit ID is required" },
+                { status: 400 }
+            );
+        }
+
+        await connectToDB();
+
+        const updatedHabit = await HabitsCollection.findOneAndUpdate(
+            { _id: habitId },
+            {
+                $set: {
+                    name,
+                    icon,
+                    frequency,
+                    notificationTime,
+                    isNotificationOn,
+                    areas,
+                    completedDays,
+                },
+            },
+            { returnDocument: "after" }
+        );
+
+        return NextResponse.json(
+            {
+                message: "Habit successfully updated",
+                habit: updatedHabit.value,
+             }
+        );
+    } catch (error) {
+        console.error("Error updating habit:", error);
+        return NextResponse.json(
+            { message: "An error has occured while updating the habit" },
+            { status: 500 }
+        );
+    }
+}
