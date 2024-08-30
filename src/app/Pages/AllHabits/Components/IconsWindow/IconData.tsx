@@ -79,74 +79,74 @@ export const iconsData: IconData[] = [
 ];
 
 export function textToIcon(iconText: string): IconProp | string {
-  switch (iconText.toLowerCase()) {
-    case "coffee":
+  switch (iconText) {
+    case "faCoffee":
       return faCoffee;
-    case "apple-alt":
+    case "faAppleAlt":
       return faAppleAlt;
-    case "carrot":
+    case "faCarrot":
       return faCarrot;
-    case "smile":
+    case "faSmile":
       return faSmile;
-    case "anchor":
+    case "faAnchor":
       return faAnchor;
-    case "bicycle":
+    case "faBicycle":
       return faBicycle;
-    case "book":
+    case "faBook":
       return faBook;
-    case "camera":
+    case "faCamera":
       return faCamera;
-    case "cloud":
+    case "faCloud":
       return faCloud;
-    case "code":
+    case "faCode":
       return faCode;
-    case "envelope":
+    case "faEnvelope":
       return faEnvelope;
-    case "heart":
+    case "faHeart":
       return faHeart;
-    case "home":
+    case "faHome":
       return faHome;
-    case "key":
+    case "faKey":
       return faKey;
-    case "laptop":
+    case "faLaptop":
       return faLaptop;
-    case "map":
+    case "faMap":
       return faMap;
-    case "music":
+    case "faMusic":
       return faMusic;
-    case "pencil-alt":
+    case "faPencilAlt":
       return faPencilAlt;
-    case "plane":
+    case "faPlane":
       return faPlane;
-    case "rocket":
+    case "faRocket":
       return faRocket;
-    case "search":
+    case "faSearch":
       return faSearch;
-    case "shoppingcart":
+    case "faShoppingCart":
       return faShoppingCart;
-    case "star":
+    case "faStar":
       return faStar;
-    case "sun":
+    case "faSun":
       return faSun;
-    case "trophy":
+    case "faTrophy":
       return faTrophy;
-    case "user":
+    case "faUser":
       return faUser;
-    case "wrench":
+    case "faWrench":
       return faWrench;
-    case "bell":
+    case "faBell":
       return faBell;
-    case "chartline":
+    case "faChartLine":
       return faChartLine;
-    case "chess":
+    case "faChess":
       return faChess;
-    case "dog":
+    case "faDog":
       return faDog;
-    case "feather":
+    case "faFeather":
       return faFeather;
-    case "guitar":
+    case "faGuitar":
       return faGuitar;
-    case "tools":
+    case "faTools":
       return faTools;
     default:
       return "unknown";

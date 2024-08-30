@@ -164,9 +164,9 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         
         function fetchAllAreas() {
             const allAreasData: AreaType[] = [
-              { _id: uuidv4(), icon: textToIcon("globe"), name: "All" },
-              { _id: uuidv4(), icon: textToIcon("coffee"), name: "Study" },
-              { _id: uuidv4(), icon: textToIcon("code"), name: "Code" },
+              { _id: uuidv4(), icon: textToIcon("faGlobe"), name: "All" },
+              { _id: uuidv4(), icon: textToIcon("faCoffee"), name: "Study" },
+              { _id: uuidv4(), icon: textToIcon("faCode"), name: "Code" },
             ];
             setAllAreas(allAreasData);
         }
