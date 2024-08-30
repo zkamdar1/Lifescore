@@ -13,18 +13,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { defaultColor, darkModeColor } from "@/colors";
 
 
-export function sendNotifications(habitName: string) {
-  if ("Notification" in window && Notification.permission === "granted") {
-    const notification = new Notification("LifeScore", {
-      body: `It's time to do your habit: ${habitName}`,
-    });
-
-    setTimeout(() => {
-      notification.close();
-    }, 5000);
-  }
-}
-
 function Dashboard() {
     const { darkModeObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;

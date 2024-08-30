@@ -1,5 +1,3 @@
-import { sendNotifications } from "./dashboard/page";
-
 export default function scheduleNotification(
     notificationTime: string,
     days: string[],
@@ -47,4 +45,16 @@ export default function scheduleNotification(
 
         setTimeout(() => sendNotifications(habitName), timeout);
     });
+}
+
+function sendNotifications(habitName: string) {
+  if ("Notification" in window && Notification.permission === "granted") {
+    const notification = new Notification("LifeScore", {
+      body: `It's time to do your habit: ${habitName}`,
+    });
+
+    setTimeout(() => {
+      notification.close();
+    }, 5000);
+  }
 }
