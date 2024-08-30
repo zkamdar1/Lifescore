@@ -19,6 +19,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { textToIcon } from "./Pages/AllHabits/Components/IconsWindow/IconData";
 import { getDateString } from "./utils/allHabitsUtils/DateFunction";
 import { v4 as uuidv4 } from "uuid"; 
+import { useUser } from "@clerk/nextjs";
 
 const GlobalContext = createContext<GlobalContextType>({
     menuItemObject: {
@@ -102,11 +103,7 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         { id: 2, icon: faMoon, isSelected: false },
     ]);
 
-    const [allAreas, setAllAreas] = useState<AreaType[]>([
-        { _id: uuidv4(), icon: faUsers, name: "All" },
-        { _id: uuidv4(), icon: faGraduationCap, name: "Study" },
-        { _id: uuidv4(), icon: faCode, name: "Code" },
-    ]);
+    const [allAreas, setAllAreas] = useState<AreaType[]>([]);
 
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
     const [isDarkMode, setDarkMode] = useState<boolean>(false);
@@ -123,28 +120,60 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     });
     const [openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
     const [selectedItems, setSelectedItems] = useState<HabitType | AreaType | null>(null);
+    const { isLoaded, isSignedIn, user } = useUser();
 
     useEffect(() => {
-        function fetchData() {
-            const allHabitsData: HabitType[] = [
-                {
-                    _id: uuidv4(),
-                    name: "test habit",
-                    icon: textToIcon("tools") as IconProp,
-                    frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
-                    notificationTime: "",
-                    isNotificationOn: false,
-                    areas: [{ _id: uuidv4(), icon: faGraduationCap, name: "Study"}],
-                    completedDays: [{ _id: uuidv4(), date: "08/29/2024"}],
-                },
-            ];
+        const fetchAllHabits = async () => {
+            try {
+                const response = await fetch(`/api/habits?clerkId=${user?.id}`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch habits");
+                }
+                const data: { habits: HabitType[] } = await response.json();
 
-            setTimeout(() => {
-                setAllHabits(allHabitsData);
-            }, 1000);
+                const updatedHabits = data.habits.map((habit: HabitType) => {
+                    if (typeof habit.icon === "string") {
+                        return {
+                            ...habit,
+                            icon: textToIcon(habit.icon) as IconProp,
+                        };
+                    }
+                    return habit;
+                });
+
+                const updatedHabitsWithAreas = updatedHabits.map((habit: HabitType) => {
+                    const updatedAreas = habit.areas.map((area: AreaType) => {
+                        if (typeof area.icon === "string") {
+                            return {
+                                ...area,
+                                icon: textToIcon(area.icon) as IconProp,
+                            };
+                        }
+                        return area;
+                    });
+                    return { ...habit, areas: updatedAreas };
+                });
+
+                console.log(updatedHabitsWithAreas);
+
+                setAllHabits(updatedHabitsWithAreas);
+            } catch (error) {
+                console.error("Error fetching habits:", error);
+            }
+        };
+        
+        function fetchAllAreas() {
+            const allAreasData: AreaType[] = [
+              { _id: uuidv4(), icon: textToIcon("globe"), name: "All" },
+              { _id: uuidv4(), icon: textToIcon("coffee"), name: "Study" },
+              { _id: uuidv4(), icon: textToIcon("code"), name: "Code" },
+            ];
+            setAllAreas(allAreasData);
         }
-        fetchData();
-    }, []);
+        
+        fetchAllHabits();
+        fetchAllAreas();
+    }, [isSignedIn]);
 
     return (
         <GlobalContext.Provider

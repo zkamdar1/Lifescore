@@ -14,16 +14,19 @@ import { addNewHabit } from "@/src/app/utils/allHabitsUtils/addNewHabit";
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid"; 
 import { editHabit } from "@/src/app/utils/allHabitsUtils/editHabits";
+import { useUser } from "@clerk/nextjs";
 
 function HabitWindow() {
     const { habitWindowObject, darkModeObject, selectedItemsObject } = useGlobalContextProvider();
     const { openHabitWindow } = habitWindowObject;
     const { selectedItems} = selectedItemsObject;
     const { isDarkMode } = darkModeObject;
+    const { user } = useUser();
     const [ habitItem, setHabitItem ] = useState<HabitType>({
         _id: uuidv4(),
         name: "",
         icon: faQuestion,
+        clerkUserId: user?.id || "",
         frequency: [{ type: "Daily", days: ["Mo"], number: 1}],
         notificationTime: "",
         isNotificationOn: false,
@@ -39,6 +42,7 @@ function HabitWindow() {
           _id: uuidv4(),
           name: "",
           icon: faQuestion,
+          clerkUserId: user?.id || "",
           frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
           notificationTime: "",
           isNotificationOn: false,
@@ -267,7 +271,7 @@ function SaveButton({ habit }: { habit: HabitType }) {
       );
 
       if (!habitExists) {
-        addNewHabit({ allHabits, setAllHabits, newHabit: habit });
+        addNewHabit({ allHabits, setAllHabits, habit: habit });
         setOpenHabitWindow(false);
       }
     } else {

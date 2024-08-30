@@ -152,3 +152,78 @@ export function textToIcon(iconText: string): IconProp | string {
       return "unknown";
   }
 }
+
+export function iconToText(icon: any): string {
+  switch (icon.iconName) {
+    case "coffee":
+      return "faCoffee";
+    case "apple-alt":
+      return "faAppleAlt";
+    case "carrot":
+      return "faCarrot";
+    case "smile":
+      return "faSmile";
+    case "anchor":
+      return "faAnchor";
+    case "bicycle":
+      return "faBicycle";
+    case "book":
+      return "faBook";
+    case "camera":
+      return "faCamera";
+    case "cloud":
+      return "faCloud";
+    case "code":
+      return "faCode";
+    case "envelope":
+      return "faEnvelope";
+    case "heart":
+      return "faHeart";
+    case "home":
+      return "faHome";
+    case "key":
+      return "faKey";
+    case "laptop":
+      return "faLaptop";
+    case "map":
+      return "faMap";
+    case "music":
+      return "faMusic";
+    case "pencil-alt":
+      return "faPencilAlt";
+    case "plane":
+      return "faPlane";
+    case "rocket":
+      return "faRocket";
+    case "search":
+      return "faSearch";
+    case "shopping-cart":
+      return "faShoppingCart";
+    case "star":
+      return "faStar";
+    case "sun":
+      return "faSun";
+    case "trophy":
+      return "faTrophy";
+    case "user":
+      return "faUser";
+    case "wrench":
+      return "faWrench";
+    case "bell":
+      return "faBell";
+    case "chart-line":
+      return "faChartLine";
+    case "chess":
+      return "faChess";
+    case "dog":
+      return "faDog";
+    case "feather":
+      return "faFeather";
+    case "guitar":
+      return "faGuitar";
+    case "tools":
+      return "faTools";
+    default:
+      return "unknown";
+  }
+}

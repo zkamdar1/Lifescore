@@ -3,7 +3,7 @@ import React from "react";
 
 export type AreaType = {
     _id: string;
-    icon: IconProp;
+    icon: any;
     name: string;
 };
 
@@ -14,14 +14,15 @@ export type FrequencyType = {
 };
 
 export type CompleteDaysType = {
-  _id: string,
+  _id?: string,
   date: string,
 };
 
 export type HabitType = {
-  _id: string;
+  _id?: string;
   name: string;
   icon: IconProp;
+  clerkUserId: string;
   frequency: FrequencyType[];
   notificationTime: string;
   isNotificationOn: boolean;
