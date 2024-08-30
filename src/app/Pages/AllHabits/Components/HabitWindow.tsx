@@ -13,6 +13,7 @@ import { AreaType, FrequencyType, HabitType, DayOption, RepeatOption } from "@/s
 import { addNewHabit } from "@/src/app/utils/allHabitsUtils/addNewHabit";
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid"; 
+import { editHabit } from "@/src/app/utils/allHabitsUtils/editHabits";
 
 function HabitWindow() {
     const { habitWindowObject, darkModeObject, selectedItemsObject } = useGlobalContextProvider();
@@ -246,7 +247,7 @@ function InputNameAndIconButton({
 
 function SaveButton({ habit }: { habit: HabitType }) {
   const { allHabitsObject, habitWindowObject, selectedItemsObject } = useGlobalContextProvider();
-  const { selectedItems } = selectedItemsObject;
+  const { selectedItems, setSelectedItems } = selectedItemsObject;
   const { allHabits, setAllHabits } = allHabitsObject;
   const { setOpenHabitWindow, openHabitWindow } = habitWindowObject;
   const [buttonText, setButtonText] = useState("Add a Habit");
@@ -255,27 +256,31 @@ function SaveButton({ habit }: { habit: HabitType }) {
     selectedItems ? setButtonText("Edit Habit") : setButtonText("Add a Habit");
   }, [openHabitWindow])
 
-  function checkNewHabitObject() {
-    if (habit.name.trim() === "") {
-      return toast.error("The habit name field is still empty!");
-    }
+  function checkHabitObject() {
+    if (!selectedItems) {
+      if (habit.name.trim() === "") {
+        return toast.error("The habit name field is still empty!");
+      }
 
-    const habitExists = allHabits.some(
-      (singleHabit) => singleHabit.name === habit.name
-    );
+      const habitExists = allHabits.some(
+        (singleHabit) => singleHabit.name === habit.name
+      );
 
-    if (!habitExists) {
-      addNewHabit({ allHabits, setAllHabits, newHabit: habit });
-      setOpenHabitWindow(false);
+      if (!habitExists) {
+        addNewHabit({ allHabits, setAllHabits, newHabit: habit });
+        setOpenHabitWindow(false);
+      }
     } else {
-      toast.error("Habit already exists");
+      editHabit({ allHabits, setAllHabits, habit, selectedItems });
+      setOpenHabitWindow(false);
     }
+    setSelectedItems(null);
   }
 
     return (
         <div className="w-full flex justify-center mt-9">
             <button
-                onClick={checkNewHabitObject}
+                onClick={checkHabitObject}
                 className="bg-customRed p-4 w-[98%] rounded-md text-white"
             >
                 {buttonText}
@@ -310,9 +315,11 @@ function Repeat({
 
   const [allDays, setAllDays] = useState<DayOption[]>(days);
   const [weeks, setWeeks] = useState(1);
-  const { darkModeObject } = useGlobalContextProvider();
+  const { darkModeObject, selectedItemsObject, habitWindowObject } = useGlobalContextProvider();
   const { isDarkMode } = darkModeObject;
   const [nameOfSelectedOption, setNameofSelectedOption] = useState("");
+  const { selectedItems } = selectedItemsObject;
+  const { openHabitWindow } = habitWindowObject;
 
   function changeOption(indexClicked: number) {
     const updateRepeatOption = repeatOptions.map((singleOption, index) => {
@@ -335,11 +342,33 @@ function Repeat({
     onChangeWeeksOption(weeks);
   }, [weeks]);
     
+  useEffect(() => {    
+    if (selectedItems) {
+
+      const currentHabitSelected = selectedItems as HabitType;
+      const selectedOptionofHabitSelected = currentHabitSelected.frequency[0].type;
+      const copyRepeatOptions = repeatOptions.map((singleOption) => {
+        if (singleOption.name === selectedOptionofHabitSelected) {
+          return { ...singleOption, isSelected: true };
+        }
+        return { ...singleOption, isSelected: false };
+      });
+      setRepeatOptions(copyRepeatOptions);
+    } else {
+      const copyRepeatOptions = repeatOptions.map((singleOption) => {
+        return { ...singleOption, isSelected: false };
+      });
+
+      copyRepeatOptions[0].isSelected = true;
+      setRepeatOptions(copyRepeatOptions);
+    }    
+  }, [openHabitWindow]);
+
   useEffect(() => {
     const getNameOptionSelected = repeatOptions.filter(
-        (singleOption) => singleOption.isSelected
+      (singleOption) => singleOption.isSelected
     )[0].name;
-      
+
     setNameofSelectedOption(getNameOptionSelected);
   }, [repeatOptions]);
 
@@ -386,9 +415,10 @@ function DailyOptions({
     allDays: DayOption[];
     setAllDays: React.Dispatch<React.SetStateAction<DayOption[]>>;
     }) {
-    const { darkModeObject, habitWindowObject } = useGlobalContextProvider();
+    const { darkModeObject, habitWindowObject, selectedItemsObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
     const {openHabitWindow } = habitWindowObject;
+    const { selectedItems} = selectedItemsObject;
 
     function selectedDays(singleDayIndex: number) {
         const selectedCount: number = allDays.filter(
@@ -410,11 +440,25 @@ function DailyOptions({
   
     useEffect(() => {
       if (openHabitWindow) {
-        const updateSelectedDays = allDays.map((singleDay) => {
-          return { ...singleDay, isSelected: false };
-        })
-        updateSelectedDays[0].isSelected = true;
-        setAllDays(updateSelectedDays);
+        if (!selectedItems) {
+          const updateSelectedDays = allDays.map((singleDay) => {
+            return { ...singleDay, isSelected: false };
+          })
+
+          updateSelectedDays[0].isSelected = true;
+          setAllDays(updateSelectedDays);
+        } else {
+          const currentHabitSelected = selectedItems as HabitType;
+          const selectedOptionofHabitSelected = currentHabitSelected.frequency[0].days;
+          const updateSelectedDays = allDays.map((singleDay) => {
+            if (selectedOptionofHabitSelected.includes(singleDay.name)) {
+              return { ...singleDay, isSelected: true };
+            } else {
+              return { ...singleDay, isSelected: false };
+            }
+          });
+          setAllDays(updateSelectedDays);
+        }
       }
     }, [openHabitWindow]);
 
@@ -518,8 +562,10 @@ function Reminder({
   habitItem: HabitType;
   setHabitItem: React.Dispatch<React.SetStateAction<HabitType>>;
 }) {
-    const { darkModeObject, openTimePickerObject } = useGlobalContextProvider();
+    const { darkModeObject, openTimePickerObject, selectedItemsObject, habitWindowObject } = useGlobalContextProvider();
     const { setOpenTimePickerWindow } = openTimePickerObject;
+    const { selectedItems} = selectedItemsObject;
+    const { openHabitWindow} = habitWindowObject;
     const { isDarkMode } = darkModeObject;
     const [isOn, setIsOn] = useState(false);
 
@@ -533,6 +579,16 @@ function Reminder({
     function openTheTimerPicker() {
       setOpenTimePickerWindow(true);
     }
+  
+  useEffect(() => {
+    if (selectedItems) {
+      const currentHabitSelected = selectedItems as HabitType;
+      const { isNotificationOn } = currentHabitSelected;
+      setIsOn(isNotificationOn);
+    } else {
+      setIsOn(false);
+    }
+  }, [openHabitWindow]);
 
     return (
       <div className="flex flex-col gap-2 mt-10 px-3">

@@ -11,6 +11,7 @@ import { defaultColor } from "@/colors";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useGlobalContextProvider } from "@/src/app/contextApi";
 import { useState } from "react";
+import { HabitType } from "@/src/app/Types/GlobalTypes";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -39,8 +40,10 @@ export default function MultipleSelectChip({
     onChange: (selectedAreasItems: any) => void;
 }) {
   const theme = useTheme();
-  const {allAreasObject} = useGlobalContextProvider();
-  const {allAreas} = allAreasObject;
+  const {allAreasObject, selectedItemsObject, habitWindowObject} = useGlobalContextProvider();
+  const { allAreas } = allAreasObject;
+  const { selectedItems } = selectedItemsObject;
+  const { openHabitWindow } = habitWindowObject;
     
   const [selectedAreas, setSelectedAreas] = React.useState<string[]>([]);
     
@@ -70,6 +73,21 @@ export default function MultipleSelectChip({
   React.useEffect(() => {
     onChange(selectedAreasItems);
   }, [selectedAreasItems]);
+
+  React.useEffect(() => {
+    if (selectedItems) {
+      const habitSelected = selectedItems as HabitType;
+      const { areas } = habitSelected;
+
+      const selectedArea = areas.map((area) => {
+        return area.name;
+      });
+
+      setSelectedAreas(selectedArea);
+    } else {
+      setSelectedAreas([]);
+    }
+  }, [openHabitWindow]);
 
   return (
     <div>
