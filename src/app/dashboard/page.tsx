@@ -12,6 +12,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { defaultColor, darkModeColor } from "@/colors";
 
+
 export function sendNotifications(habitName: string) {
   if ("Notification" in window && Notification.permission === "granted") {
     const notification = new Notification("LifeScore", {
