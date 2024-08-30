@@ -11,10 +11,12 @@ import { v4 as uuidv4 } from "uuid";
 
 
 function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
-    const { darkModeObject, allHabitsObject, selectedCurrentDayObject } = useGlobalContextProvider();
+    const { darkModeObject, allHabitsObject, selectedCurrentDayObject, openDropDownObject, dropDownPositionsObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
     const { allHabits, setAllHabits} = allHabitsObject;
-    const {selectedCurrentDate} = selectedCurrentDayObject;
+    const { selectedCurrentDate } = selectedCurrentDayObject;
+    const { setOpenDropDown } = openDropDownObject;
+    const { setDropDownPositions } = dropDownPositionsObject;
     
     const [checked, setChecked] = useState(
     singleHabit.completedDays.some((day) => day.date === selectedCurrentDate)
@@ -68,6 +70,17 @@ function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
         }
         });
         setAllHabits(updateAllHabits);
+    }
+
+    function handleClickThreeDots(event: React.MouseEvent<HTMLButtonElement>) {
+        const target = event.target as HTMLElement;
+        const rect = target.getBoundingClientRect();
+        const top = rect.top;
+        const left = rect.left;
+        setDropDownPositions({ top, left });
+
+        event.stopPropagation();
+        setOpenDropDown(true);
     }
 
     useEffect(() => {
@@ -135,8 +148,8 @@ function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
             </div>
             {/* Div for three dot button */}
             <div className="w-10 flex item-center justify-center">
-            <IconButton>
-                <MoreVertIcon sx={{ color: isDarkMode ? "white" : "gray" }} />
+            <IconButton onClick={handleClickThreeDots}>
+                <MoreVertIcon  sx={{ color: isDarkMode ? "white" : "gray" }} />
             </IconButton>
             </div>
         </div>

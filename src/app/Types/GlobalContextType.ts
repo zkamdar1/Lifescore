@@ -49,5 +49,20 @@ export type GlobalContextType = {
   allFilteredHabitsObject: {
     allFilteredHabits: HabitType[];
     setAllFilteredHabits: Dispatch<SetStateAction<HabitType[]>>;
-  }
+  };
+  openDropDownObject: {
+    openDropDown: boolean;
+    setOpenDropDown: Dispatch<SetStateAction<boolean>>;
+  };
+  dropDownPositionsObject: {
+    dropDownPositions: {
+      top: number;
+      left: number;
+    };
+    setDropDownPositions: Dispatch<SetStateAction<{ top: number; left: number; }>>;
+  };
+  openConfirmationWindowObject: {
+    openConfirmationWindow: boolean;
+    setOpenConfirmationWindow: Dispatch<SetStateAction<boolean>>;
+  };
 };

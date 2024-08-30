@@ -6,10 +6,14 @@ import HabitsCompleted from "./Components/HabitsCompleted";
 import HabitWindow from "./Components/HabitWindow";
 import { Toaster } from "react-hot-toast";
 import TagsContainer from "./Components/TagsContainer";
+import  ConfirmationWindow  from "../../ConfirmationWindow";
+import DropDown from "../../Dropdown";
 
 function AllHabits() {
     return (
         <div className="max-lg:flex-col w-full flex flex-row gap-0 relative">
+            <ConfirmationWindow />
+            <DropDown />
             <Toaster />
             <HabitWindow />
             <div className="flex-col flex-grow m-3">

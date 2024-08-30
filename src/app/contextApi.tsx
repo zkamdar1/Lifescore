@@ -67,6 +67,21 @@ const GlobalContext = createContext<GlobalContextType>({
         allFilteredHabits: [],
         setAllFilteredHabits: () => {},
     },
+    openDropDownObject: {
+        openDropDown: false,
+        setOpenDropDown: () => {},
+    },
+    dropDownPositionsObject: {
+        dropDownPositions: {
+            top: 0,
+            left: 0,
+        },
+        setDropDownPositions: () => {},
+    },
+    openConfirmationWindowObject: {
+        openConfirmationWindow: false,
+        setOpenConfirmationWindow: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -97,7 +112,12 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [offsetDay, setOffsetDay] = useState(0);
     const [selectedTagString, setSelectedTagString] = useState<string>("All");
     const [allFilteredHabits, setAllFilteredHabits] = useState<HabitType[]>([]);
-
+    const [openDropDown, setOpenDropDown] = useState(false);
+    const[dropDownPositions, setDropDownPositions] = useState({
+        top: 0,
+        left: 0,
+    });
+    const [openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
 
     useEffect(() => {
         function fetchData() {
@@ -160,6 +180,18 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 allFilteredHabitsObject: {
                     allFilteredHabits,
                     setAllFilteredHabits,
+                },
+                openDropDownObject: {
+                    openDropDown,
+                    setOpenDropDown,
+                },
+                dropDownPositionsObject: {
+                    dropDownPositions,
+                    setDropDownPositions,
+                },
+                openConfirmationWindowObject: {
+                    openConfirmationWindow,
+                    setOpenConfirmationWindow,
                 },
             }}
         >
