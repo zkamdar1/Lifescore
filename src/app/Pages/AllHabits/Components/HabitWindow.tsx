@@ -15,8 +15,9 @@ import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid"; 
 
 function HabitWindow() {
-    const { habitWindowObject, darkModeObject } = useGlobalContextProvider();
+    const { habitWindowObject, darkModeObject, selectedItemsObject } = useGlobalContextProvider();
     const { openHabitWindow } = habitWindowObject;
+    const { selectedItems} = selectedItemsObject;
     const { isDarkMode } = darkModeObject;
     const [ habitItem, setHabitItem ] = useState<HabitType>({
         _id: uuidv4(),
@@ -31,6 +32,31 @@ function HabitWindow() {
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
 
+    useEffect(() => {
+      if (!openHabitWindow) {
+        setHabitItem({
+          _id: uuidv4(),
+          name: "",
+          icon: faQuestion,
+          frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
+          notificationTime: "",
+          isNotificationOn: false,
+          areas: [],
+          completedDays: [],
+        });
+      } else {
+        if (selectedItems) {
+          setHabitItem(selectedItems as HabitType)
+        }
+      }
+    }, [openHabitWindow]);  
+  
+    useEffect(() => {
+      if (selectedItems) {
+        setHabitItem(selectedItems as HabitType);
+      }
+    }, [selectedItems]);
+  
     const onUpdateHabitName = (inputText: string) => {
         const copyHabitItem = { ...habitItem };
         copyHabitItem.name = inputText;
@@ -88,21 +114,6 @@ function HabitWindow() {
         setHabitItem(copyHabitItem);
     }, [iconSelected]);
   
-    useEffect(() => {
-      if (openHabitWindow) {
-        setHabitItem({
-          _id: uuidv4(),
-          name: "",
-          icon: faChevronDown,
-          frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
-          notificationTime: "",
-          isNotificationOn: false,
-          areas: [],
-          completedDays: [],
-        });
-      }
-    }, [openHabitWindow]);
-
     return (
         <div
             style={{
@@ -123,6 +134,7 @@ function HabitWindow() {
                 habitName={habitItem.name}
                 setOpenIconWindow={setOpenIconWindow}
                 iconSelected={iconSelected}
+                setIconSelected={setIconSelected}
             />
             <Repeat
                 onChangeOption={changeRepeatOption}
@@ -139,14 +151,23 @@ function HabitWindow() {
 export default HabitWindow;
 
 function Header() {
-    const { habitWindowObject } = useGlobalContextProvider();
-    const { setOpenHabitWindow } = habitWindowObject;
+    const { habitWindowObject, selectedItemsObject } = useGlobalContextProvider();
+    const { setOpenHabitWindow, openHabitWindow } = habitWindowObject;
+    const { setSelectedItems, selectedItems} = selectedItemsObject;
+    const [header, setHeader] = useState("Add New Habit");
+    
+    useEffect(() => {
+      selectedItems ? setHeader("Edit Habit") : setHeader("Add New Habit");
+    }, [openHabitWindow]);
 
     return (
         <div className="flex justify-between items-center">
-            <span className="font-bold text-xl">Add New Habit</span>
+            <span className="font-bold text-xl">{header}</span>
             <FontAwesomeIcon
-                onClick={() => setOpenHabitWindow(false)}
+                onClick={() =>{
+                   setOpenHabitWindow(false)
+                   setSelectedItems(null)
+                }}
                 className="text-gray-400 cursor-pointer"
                 icon={faClose}
             />
@@ -159,16 +180,19 @@ function InputNameAndIconButton({
     habitName,
     setOpenIconWindow,
     iconSelected,
+    setIconSelected,
 }: {
         onUpdateHabitName: (inputText: string) => void;
         habitName: string;
         setOpenIconWindow: React.Dispatch<React.SetStateAction<boolean>>;
         iconSelected: IconProp;
+        setIconSelected: React.Dispatch<React.SetStateAction<IconProp>>;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const { habitWindowObject, darkModeObject } = useGlobalContextProvider();
+    const { habitWindowObject, darkModeObject, selectedItemsObject } = useGlobalContextProvider();
     const { openHabitWindow } = habitWindowObject;
     const { isDarkMode } = darkModeObject;
+    const {selectedItems } = selectedItemsObject;
 
     function updateInputHabit(event: React.ChangeEvent<HTMLInputElement>) {
         onUpdateHabitName(event.target.value);
@@ -181,6 +205,11 @@ function InputNameAndIconButton({
 
         if (!openHabitWindow) {
             onUpdateHabitName("");
+        } else {
+          if (selectedItems) {
+            onUpdateHabitName(selectedItems.name);
+            setIconSelected(selectedItems.icon);
+          }
         }
     }, [openHabitWindow]);
 
@@ -216,9 +245,15 @@ function InputNameAndIconButton({
 }
 
 function SaveButton({ habit }: { habit: HabitType }) {
-  const { allHabitsObject, habitWindowObject } = useGlobalContextProvider();
+  const { allHabitsObject, habitWindowObject, selectedItemsObject } = useGlobalContextProvider();
+  const { selectedItems } = selectedItemsObject;
   const { allHabits, setAllHabits } = allHabitsObject;
-  const { setOpenHabitWindow } = habitWindowObject;
+  const { setOpenHabitWindow, openHabitWindow } = habitWindowObject;
+  const [buttonText, setButtonText] = useState("Add a Habit");
+
+  useEffect(() => {
+    selectedItems ? setButtonText("Edit Habit") : setButtonText("Add a Habit");
+  }, [openHabitWindow])
 
   function checkNewHabitObject() {
     if (habit.name.trim() === "") {
@@ -243,7 +278,7 @@ function SaveButton({ habit }: { habit: HabitType }) {
                 onClick={checkNewHabitObject}
                 className="bg-customRed p-4 w-[98%] rounded-md text-white"
             >
-                Add a Habit
+                {buttonText}
             </button>
         </div>
     );

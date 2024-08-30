@@ -11,8 +11,9 @@ import { v4 as uuidv4 } from "uuid";
 
 
 function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
-    const { darkModeObject, allHabitsObject, selectedCurrentDayObject, openDropDownObject, dropDownPositionsObject } = useGlobalContextProvider();
+    const { darkModeObject, allHabitsObject, selectedCurrentDayObject, openDropDownObject, dropDownPositionsObject, selectedItemsObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
+    const { setSelectedItems } = selectedItemsObject;
     const { allHabits, setAllHabits} = allHabitsObject;
     const { selectedCurrentDate } = selectedCurrentDayObject;
     const { setOpenDropDown } = openDropDownObject;
@@ -81,6 +82,7 @@ function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
 
         event.stopPropagation();
         setOpenDropDown(true);
+        setSelectedItems(singleHabit);
     }
 
     useEffect(() => {

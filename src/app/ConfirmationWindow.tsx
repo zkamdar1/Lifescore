@@ -1,9 +1,28 @@
 import { useGlobalContextProvider } from "./contextApi";
+import { AreaType, HabitType } from "./Types/GlobalTypes";
+import { deleteHabit } from "./utils/allHabitsUtils/deleteHabit";
 
 export function ConfirmationWindow() {
-    const { openConfirmationWindowObject } = useGlobalContextProvider();
+    const { openConfirmationWindowObject, selectedItemsObject, allHabitsObject } = useGlobalContextProvider();
     const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
-    
+    const { selectedItems, setSelectedItems } = selectedItemsObject;
+    const { allHabits, setAllHabits } = allHabitsObject;
+
+    function isAreaType(item: any): item is AreaType {
+        return "name" in item && "icon" in item && !("frequency" in item);
+    }
+
+    function isHabitType(item: any): item is HabitType {
+        return "frequency" in item && "notificationTime" in item;
+    }
+
+    function deleteOption() {
+        if (isHabitType(selectedItems)) {
+            deleteHabit(allHabits, setAllHabits, selectedItems);
+            setOpenConfirmationWindow(false);
+        }    
+    }
+
     return (
         <div
             style={{
@@ -23,12 +42,16 @@ export function ConfirmationWindow() {
             </span>
             <div className="flex gap-2 mt-5">
                 <button
-                    onClick={() => setOpenConfirmationWindow(false)}
+                    onClick={() => {
+                        setOpenConfirmationWindow(false);
+                        setSelectedItems(null);
+                    }}
                     className="border text-[13px] w-full px-10 p-3 rounded-md"
                 >
                     Cancel
                 </button>
                 <button
+                    onClick={() => deleteOption()}
                     className={`w-full px-10 text-[13px] p-3 text-white rounded-md bg-customRed`}
                 >
                     Delete

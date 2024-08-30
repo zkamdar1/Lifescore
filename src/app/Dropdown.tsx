@@ -11,11 +11,13 @@ interface dropMenuItem {
 }
 
 function DropDown() {
-    const { darkModeObject, openDropDownObject, dropDownPositionsObject, openConfirmationWindowObject } = useGlobalContextProvider();
+    const { darkModeObject, openDropDownObject, dropDownPositionsObject, openConfirmationWindowObject, selectedItemsObject, habitWindowObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
     const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
     const { openDropDown, setOpenDropDown } = openDropDownObject;
-    const { dropDownPositions, setDropDownPositions } = dropDownPositionsObject;
+    const { dropDownPositions } = dropDownPositionsObject;
+    const { setSelectedItems } = selectedItemsObject;
+    const { openHabitWindow, setOpenHabitWindow } = habitWindowObject;
     const ref = useRef<HTMLDivElement>(null);
     const dropDownMenuItems: dropMenuItem[] = [
         { name: "Edit", icon: faPencil },
@@ -33,12 +35,13 @@ function DropDown() {
     function handleClickedOpen(index: number) {
         switch (index) {
             case 0:
-                console.log("edit");
+                setOpenHabitWindow(true);
+                setOpenDropDown(false);
 
                 break;
             case 1:
                 setOpenConfirmationWindow(true);
-                setOpenDropDown(false)
+                setOpenDropDown(false);
 
                 break;
             default:
@@ -50,6 +53,9 @@ function DropDown() {
         function handleOutsideClicked(event: MouseEvent) {
             if (ref && !ref.current?.contains(event.target as Node)) {
                 setOpenDropDown(false);
+                if (!openConfirmationWindow && !openHabitWindow) {
+                    setSelectedItems(null);
+                }
             }
         }
 

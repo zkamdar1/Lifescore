@@ -82,6 +82,10 @@ const GlobalContext = createContext<GlobalContextType>({
         openConfirmationWindow: false,
         setOpenConfirmationWindow: () => {},
     },
+    selectedItemsObject: {
+        selectedItems: null,
+        setSelectedItems: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -99,9 +103,9 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     ]);
 
     const [allAreas, setAllAreas] = useState<AreaType[]>([
-      { _id: uuidv4(), icon: faUsers, name: "All" },
-      { _id: uuidv4(), icon: faGraduationCap, name: "Study" },
-      { _id: uuidv4(), icon: faCode, name: "Code" },
+        { _id: uuidv4(), icon: faUsers, name: "All" },
+        { _id: uuidv4(), icon: faGraduationCap, name: "Study" },
+        { _id: uuidv4(), icon: faCode, name: "Code" },
     ]);
 
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
@@ -113,11 +117,12 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [selectedTagString, setSelectedTagString] = useState<string>("All");
     const [allFilteredHabits, setAllFilteredHabits] = useState<HabitType[]>([]);
     const [openDropDown, setOpenDropDown] = useState(false);
-    const[dropDownPositions, setDropDownPositions] = useState({
+    const [dropDownPositions, setDropDownPositions] = useState({
         top: 0,
         left: 0,
     });
     const [openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
+    const [selectedItems, setSelectedItems] = useState<HabitType | AreaType | null>(null);
 
     useEffect(() => {
         function fetchData() {
@@ -140,8 +145,6 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         }
         fetchData();
     }, []);
-
-    console.log(allHabits);
 
     return (
         <GlobalContext.Provider
@@ -192,6 +195,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 openConfirmationWindowObject: {
                     openConfirmationWindow,
                     setOpenConfirmationWindow,
+                },
+                selectedItemsObject: {
+                    selectedItems,
+                    setSelectedItems,
                 },
             }}
         >

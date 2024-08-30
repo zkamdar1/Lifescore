@@ -24,12 +24,8 @@ export default function ContainterTop() {
   }
 
   useEffect(() => {
-    console.log(offsetDay);
-
     setSelectedCurrentDate(getDateString(new Date(), offsetDay));
   }, [offsetDay]);
-
-  console.log(selectedCurrentDate);
 
   function openHabitWindowFunction() {
     setOpenHabitWindow(!openHabitWindow);

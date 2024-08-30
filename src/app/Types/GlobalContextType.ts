@@ -35,7 +35,7 @@ export type GlobalContextType = {
     setAllHabits: Dispatch<SetStateAction<HabitType[]>>;
   };
   selectedCurrentDayObject: {
-    selectedCurrentDate: string
+    selectedCurrentDate: string;
     setSelectedCurrentDate: Dispatch<SetStateAction<string>>;
   };
   offsetDayObject: {
@@ -59,10 +59,16 @@ export type GlobalContextType = {
       top: number;
       left: number;
     };
-    setDropDownPositions: Dispatch<SetStateAction<{ top: number; left: number; }>>;
+    setDropDownPositions: Dispatch<
+      SetStateAction<{ top: number; left: number }>
+    >;
   };
   openConfirmationWindowObject: {
     openConfirmationWindow: boolean;
     setOpenConfirmationWindow: Dispatch<SetStateAction<boolean>>;
+  };
+  selectedItemsObject: {
+    selectedItems: HabitType | AreaType | null;
+    setSelectedItems: Dispatch<SetStateAction<HabitType | AreaType | null>>;
   };
 };

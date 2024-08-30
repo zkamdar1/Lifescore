@@ -22,7 +22,6 @@ function IconWindow({
     const { darkModeObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
 
-    console.log(openIconWindow);
 
     return (
       <div
