@@ -82,7 +82,7 @@ export function textToIcon(iconText: string): IconProp | string {
   switch (iconText.toLowerCase()) {
     case "coffee":
       return faCoffee;
-    case "apple":
+    case "apple-alt":
       return faAppleAlt;
     case "carrot":
       return faCarrot;
@@ -114,7 +114,7 @@ export function textToIcon(iconText: string): IconProp | string {
       return faMap;
     case "music":
       return faMusic;
-    case "pencil":
+    case "pencil-alt":
       return faPencilAlt;
     case "plane":
       return faPlane;

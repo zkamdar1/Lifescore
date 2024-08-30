@@ -2,7 +2,7 @@
 
 import { useGlobalContextProvider } from "@/src/app/contextApi";
 import { darkModeColor, defaultColor } from "@/colors";
-import { faChevronDown, faClose, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faClose, faCoffee } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import IconWindow from "./IconsWindow/IconWindow";
@@ -25,7 +25,7 @@ function HabitWindow() {
     const [ habitItem, setHabitItem ] = useState<HabitType>({
         _id: uuidv4(),
         name: "",
-        icon: faQuestion,
+        icon: faCoffee,
         clerkUserId: user?.id || "",
         frequency: [{ type: "Daily", days: ["Mo"], number: 1}],
         notificationTime: "",
@@ -41,7 +41,7 @@ function HabitWindow() {
         setHabitItem({
           _id: uuidv4(),
           name: "",
-          icon: faQuestion,
+          icon: faCoffee,
           clerkUserId: user?.id || "",
           frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
           notificationTime: "",
