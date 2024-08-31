@@ -173,7 +173,11 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         
         fetchAllHabits();
         fetchAllAreas();
-    }, [isSignedIn]);
+    }, [isLoaded, isSignedIn]);
+
+    useEffect(() => {
+        setOpenSideBar(false);
+    }, [menuItems]);
 
     return (
         <GlobalContext.Provider
