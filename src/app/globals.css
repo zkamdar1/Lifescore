@@ -25,3 +25,44 @@
     text-wrap: balance;
   }
 }
+
+.react-calendar-heatmap text {
+  font-size: 10px;
+  fill: #aaa;
+}
+
+.react-calendar-heatmap .react-calendar-heatmap-small-text {
+  font-size: 5px;
+}
+
+.react-calendar-heatmap rect:hover {
+  stroke: #555;
+  stroke-width: 1px;
+}
+
+.react-calendar-heatmap rect {
+}
+
+.react-calendar-heatmap rect {
+  fill: #6b46c1;
+}
+
+.react-calendar-heatmap .color-empty {
+  fill: #f3f4f6;
+}
+
+.react-calendar-heatmap .color-scale-1 {
+  fill: #d6e685;
+}
+
+.react-calendar-heatmap .color-scale-2 {
+  fill: #0f0004;
+}
+
+.react-calendar-heatmap .color-scale-3 {
+  fill: #44a340;
+}
+
+.react-calendar-heatmap .color-scale-3 {
+  fill: #2f219c;
+}
