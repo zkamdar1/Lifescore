@@ -24,7 +24,7 @@ export function ConfirmationWindow() {
             deleteHabit(allHabits, setAllHabits, selectedItems);
             setOpenConfirmationWindow(false);
         } else if (isAreaType(selectedItems)){
-            deleteArea(selectedItems, allAreas, setAllAreas);
+            deleteArea(selectedItems, allAreas, setAllAreas, allHabits, setAllHabits);
             setOpenConfirmationWindow(false);
             setSelectedItems(null);
         }
