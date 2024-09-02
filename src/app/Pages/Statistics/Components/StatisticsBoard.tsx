@@ -62,7 +62,8 @@ export default function StatisticsBoard() {
             });
         });
 
-        let perfectDayCount = 0;
+        const perfectDayCount = calculateTotalPerfectDays(allHabits);
+
         let totalHabitsInEachDay: { [key: string]: number } = {};
         const uniqueDates = Object.keys(dateCounts);
         for (const date of uniqueDates) {
@@ -75,12 +76,6 @@ export default function StatisticsBoard() {
             });
 
             totalHabitsInEachDay[date] = numberOfHabitsEachDay.length;
-        }
-
-        for (const date in totalHabitsInEachDay) {
-            if (totalHabitsInEachDay[date] === dateCounts[date]) {
-                perfectDayCount++;
-            }
         }
 
         let totalCompleteHabits = 0;
@@ -140,7 +135,7 @@ export default function StatisticsBoard() {
     );
 }
 
-function calculateStreak(habit: HabitType): number {
+export function calculateStreak(habit: HabitType): number {
     function getDayOfWeek(dateString: string): string {
         const date = new Date(dateString);
         const days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
@@ -175,4 +170,43 @@ function calculateStreak(habit: HabitType): number {
         }
     }
     return streak;
+}
+
+export function calculateTotalPerfectDays(allHabits: HabitType[]): number {
+    const dateCounts: { [key: string]: number } = {};
+
+    allHabits.forEach((habit) => {
+        habit.completedDays.forEach((day) => {
+            const date = day.date;
+            if (dateCounts[date]) {
+                dateCounts[date] += 1;
+            } else {
+                dateCounts[date] = 1;
+            }
+        });
+    });
+
+    let perfectDayCount = 0;
+    let totalHabitsInEachDay: { [key: string]: number } = {};
+    const uniqueDates = Object.keys(dateCounts);
+
+    uniqueDates.forEach((date) => {
+        const getTwoFirstDayLetter = getCurrentDayName(date).slice(0, 2);
+
+        const numberOfHabitsEachDay = allHabits.filter((singleHabit) => {
+            return singleHabit.frequency[0].days.some(
+                (day) => day === getTwoFirstDayLetter
+            );
+        });
+
+        totalHabitsInEachDay[date] = numberOfHabitsEachDay.length;
+    });
+
+    for (const date in totalHabitsInEachDay) {
+        if (totalHabitsInEachDay[date] === dateCounts[date]) {
+            perfectDayCount++;
+        }
+    }
+
+    return perfectDayCount;
 }

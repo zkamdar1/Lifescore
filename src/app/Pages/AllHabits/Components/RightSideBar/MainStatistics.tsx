@@ -1,15 +1,73 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell } from "recharts";
 import { useGlobalContextProvider } from "@/src/app/contextApi";
 import { defaultColor, darkModeColor } from "@/colors";
+import { HabitType } from "@/src/app/Types/GlobalTypes";
+import { getCurrentDayName } from "@/src/app/utils/allHabitsUtils/DateFunction";
+import { calculateStreak, calculateTotalPerfectDays } from "../../../Statistics/Components/StatisticsBoard";
 
 function MainStatistics() {
-    const { darkModeObject } = useGlobalContextProvider();
+    const { darkModeObject, allHabitsObject, selectedCurrentDayObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
-    const statisticsInfo = [
-        { id: 1, num: 7, subtitle: "Best Streak" },
-        { id: 2, num: 10, subtitle: "Perfect Days" },
-    ];
+    const { allHabits } = allHabitsObject;
+    const { selectedCurrentDate } = selectedCurrentDayObject;
+    const [statisticsInfo, setStatisticsInfo] = useState([
+      { id: 1, num: 7, subTitle: "Best Streak" },
+      { id: 2, num: 10, subTitle: "Perfect Days" },
+    ]);
+    const [progess, setProgress] = useState<number>(0);
+    
+    function calculatePercentageOfTodaysProgress(allHabits: HabitType[]): number {
+        if (allHabits.length === 0 || !selectedCurrentDate) {
+          return 0;
+        }
+      
+      let totalHabitsCompletedDays = 0;
+      let totalHabitsOfCurrentDay = 0;
+
+      if (allHabits) {
+        const completedHabitsOfCurrentDate: HabitType[] = allHabits.filter(
+          (habit) =>
+            habit.completedDays.some((day) => day.date === selectedCurrentDate)
+        );
+
+        totalHabitsCompletedDays = completedHabitsOfCurrentDate.length;
+
+        const getTwoLettersOfCurrentDay = getCurrentDayName(
+          selectedCurrentDate
+        ).slice(0, 2);
+
+        const allHabitsOfCurrentDay = allHabits.filter((habit) =>
+          habit.frequency[0].days.some((day) => day === getTwoLettersOfCurrentDay)
+        );
+
+        totalHabitsOfCurrentDay = allHabitsOfCurrentDay.length;
+
+        const result =
+          (totalHabitsCompletedDays / totalHabitsOfCurrentDay) * 100;
+        
+        if (result === undefined || isNaN(result)) {
+          return 0;
+        }
+        return result ?? 0;
+      }
+      return 0;
+    }
+  
+    useEffect(() => {
+      setProgress(calculatePercentageOfTodaysProgress(allHabits));
+    }, [selectedCurrentDate, allHabits]);
+  
+    useEffect(() => {
+      const streaks = allHabits.map((habit) => calculateStreak(habit));
+      const totalStreak = streaks.reduce((a, b) => a + b, 0);
+      const perfectDays = calculateTotalPerfectDays(allHabits);
+
+      const copyStatsInfo = [...statisticsInfo];
+      copyStatsInfo[0].num = totalStreak;
+      copyStatsInfo[1].num = perfectDays;
+      setStatisticsInfo(copyStatsInfo);
+    }, [allHabits]);
 
     return (
       <div
@@ -25,9 +83,9 @@ function MainStatistics() {
         </span>
         {/* Circular Progress Bar */}
         <div className="relative pt-3">
-          <CircularProgressBar progress={80} />
+          <CircularProgressBar progress={progess} />
           <div className="flex flex-col justify-center items-center absolute top-[54%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <span className="font-bold text-xl text-customRed">80%</span>
+            <span className="font-bold text-xl text-customRed">{`${progess}%`}</span>
             <span className="text-[11px]">{`Today's Progress`}</span>
           </div>
         </div>
@@ -37,7 +95,7 @@ function MainStatistics() {
             <div className="flex items-center gap-3" key={singleItemIndex}>
               <div className="w-2 h-2 bg-customRed rounded-full"></div>
               <div className="text-[12px]">
-                <span className="flex flex-col font-bold">{singleItem.id}</span>
+                <span className="flex flex-col font-bold">{singleItem.num}</span>
                 <span
                   style={{
                     color: isDarkMode
@@ -46,7 +104,7 @@ function MainStatistics() {
                   }}
                   className=""
                 >
-                  {singleItem.subtitle}
+                  {singleItem.subTitle}
                 </span>
               </div>
             </div>

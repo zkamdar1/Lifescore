@@ -5,6 +5,7 @@ import { faBook, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import CalendarHeatmap from "react-calendar-heatmap";
+import { calculateStreak } from "./StatisticsBoard";
 
 export default function StatisticsHabitCard({ habit }: { habit: HabitType }) {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -12,6 +13,16 @@ export default function StatisticsHabitCard({ habit }: { habit: HabitType }) {
         darkModeObject: { isDarkMode },
     } = useGlobalContextProvider();
     const recurringDaysText = habit.frequency[0].days.join(", ");
+
+    function calculateConsistency(habit: HabitType): number {
+        const consistency =
+          (calculateStreak(habit) / habit.completedDays.length) * 100;
+        
+        if (consistency === undefined || isNaN(consistency)) {
+            return 0;
+        }
+        return consistency;
+    }
 
     return (
         <div
@@ -63,19 +74,19 @@ export default function StatisticsHabitCard({ habit }: { habit: HabitType }) {
                 <div
                     className="flex flex-col gap-1 justify-center items-center"
                 >
-                    <span className="font-bold">8</span>
+                    <span className="font-bold">{habit.completedDays.length}</span>
                     <span>Total</span>
                 </div>
                 <div
                     className="flex flex-col gap-1 justify-center items-center"
                 >
-                    <span className="font-bold">7</span>
-                    <span>Perfect Days</span>
+                    <span className="font-bold">{calculateConsistency(habit).toFixed(0)}%</span>
+                    <span>Consistency</span>
                 </div>
                 <div
                     className="flex flex-col gap-1 justify-center items-center"
                 >
-                    <span className="font-bold">6</span>
+                    <span className="font-bold">{calculateStreak(habit)}</span>
                     <span>Streaks</span>
                 </div>
             </div>
@@ -93,7 +104,7 @@ export default function StatisticsHabitCard({ habit }: { habit: HabitType }) {
                 <div
                     className={`w-[600px] ${ isExpanded ? "block" : "hidden"}`}
                 >
-                    <HabitHeatmap dateData={dateData} />
+                    <HabitHeatmap habit={habit} />
                 </div>
             </div>
             <div
@@ -114,19 +125,34 @@ type DateData = {
     count: number,
 };
 
-const dateData: DateData[] = [
-  { date: "2024-07-29", count: 1 },
-  { date: "2024-08-01", count: 4 },
-  { date: "2024-08-01", count: 0 },
-  { date: "2024-08-10", count: 1 },
-];
+function transformToDateData(habit: HabitType): DateData[] {
+    const dateMap: { [date: string]: number } = {};
 
-const HabitHeatmap = ({ dateData }: { dateData: DateData[] }) => {
+    habit.completedDays.forEach((day) => {
+        if (dateMap[day.date]) {
+            dateMap[day.date]++;
+        } else {
+            dateMap[day.date] = 1;
+        }
+    });
+
+    return Object.keys(dateMap).map((date) => ({
+        date: date,
+        count: dateMap[date],
+    }));
+}
+
+const HabitHeatmap = ({ habit }: { habit: HabitType }) => {
+    const dateData: DateData[] = transformToDateData(habit);
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setMonth(endDate.getMonth() - 6);
+
     return (
         <div>
             <CalendarHeatmap
-                startDate={new Date("2024-01-01")}
-                endDate={new Date("2024-08-31")}
+                startDate={startDate}
+                endDate={endDate}
                 values={dateData}
                 showMonthLabels={true}
                 showWeekdayLabels={true}
