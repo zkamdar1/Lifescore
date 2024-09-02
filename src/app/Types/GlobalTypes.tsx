@@ -2,8 +2,9 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import React from "react";
 
 export type AreaType = {
-    _id: string;
+    _id?: string;
     icon: any;
+    clerkUserId: string;
     name: string;
 };
 

@@ -4,6 +4,7 @@ import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { darkModeColor, defaultColor } from "@/colors";
 import { useGlobalContextProvider } from "./contextApi";
+import { AreaType, HabitType } from "./Types/GlobalTypes";
 
 interface dropMenuItem {
     name: string,
@@ -16,7 +17,7 @@ function DropDown() {
     const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
     const { openDropDown, setOpenDropDown } = openDropDownObject;
     const { dropDownPositions } = dropDownPositionsObject;
-    const { setSelectedItems } = selectedItemsObject;
+    const { setSelectedItems, selectedItems} = selectedItemsObject;
     const { openHabitWindow, setOpenHabitWindow } = habitWindowObject;
     const ref = useRef<HTMLDivElement>(null);
     const dropDownMenuItems: dropMenuItem[] = [
@@ -32,10 +33,22 @@ function DropDown() {
         setHover(state);
     }
 
+    function isHabitType(item: any): item is HabitType {
+        return "frequency" in item && "notificationTime" in item;
+    }
+
+    function isAreaType(item: any): item is AreaType {
+      return "icon" in item && "name" in item && !("frequency in item");
+    }
+
     function handleClickedOpen(index: number) {
         switch (index) {
             case 0:
-                setOpenHabitWindow(true);
+                if (isHabitType(selectedItems)) {
+                    setOpenHabitWindow(true);
+                } else if (isAreaType(selectedItems)) {
+                    console.log("editArea")
+                }
                 setOpenDropDown(false);
 
                 break;

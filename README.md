@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# LifeScore
 
-## Getting Started
+LifeScore is a web application designed to help users track their habits, set goals, and manage their daily routines. With a focus on simplicity and user experience, LifeScore provides an intuitive interface for managing habits, tracking progress, and viewing statistics.
 
-First, run the development server:
+Visit the live site: [LifeScore](https://lifescore.vercel.app/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Table of Contents
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. [Overview](#overview)
+2. [Features](#features)
+3. [Usage](#usage)
+4. [License](#license)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Overview
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+LifeScore is built to help users create and maintain good habits, track their completion rates, and gain insights into their daily routines. The app provides features like daily habit tracking, customizable habit goals, notifications, and detailed statistics.
 
-## Learn More
+Visit the live site: [LifeScore](https://lifescore.vercel.app/)
 
-To learn more about Next.js, take a look at the following resources:
+## Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Habit Tracking**: Easily create and manage daily habits.
+- **Customizable Goals**: Set specific goals for each habit and track your progress.
+- **Daily Notifications**: Receive reminders to complete your habits.
+- **Statistics Dashboard**: View detailed statistics and track your progress over time.
+- **Responsive Design**: Optimized for both desktop and mobile devices.
+- **Dark Mode Support**: Toggle between light and dark modes for a comfortable viewing experience.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Usage
 
-## Deploy on Vercel
+- **Sign Up**: Register for a new account to start tracking your habits.
+- **Create Habits**: Use the 'Add Habit' button to create new habits. Set a name, choose an icon, and specify how often you want to track the habit.
+- **Track Progress**: Mark habits as completed each day. Your progress will be tracked and displayed on the statistics dashboard.
+- **View Statistics**: Navigate to the 'Statistics' tab to see detailed insights about your habits, including streaks, perfect days, and average completions per day.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Components
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Dashboard**: The main area where you can view and interact with your habits.
+- **Statistics**: A section that provides a visual representation of your habit tracking progress.
+- **Settings**: Customize your experience by adjusting notification settings, themes, and more.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+Thank you for using LifeScore! We hope it helps you achieve your goals and improve your daily routines.

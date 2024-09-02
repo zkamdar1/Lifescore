@@ -13,6 +13,7 @@ import {
     faUsers,
     faGraduationCap,
     faCode,
+    faCoffee,
 } from "@fortawesome/free-solid-svg-icons";
 import { AreaType, HabitType } from "./Types/GlobalTypes";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -87,6 +88,16 @@ const GlobalContext = createContext<GlobalContextType>({
         selectedItems: null,
         setSelectedItems: () => {},
     },
+    openAreaFormObject: {
+        openAreaForm: false,
+        setOpenAreaForm: () => {},
+    },
+    openIconWindowObject: {
+        openIconWindow: false,
+        setOpenIconWindow: () => {},
+        iconSelected: faCoffee,
+        setIconSelected: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -121,6 +132,9 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
     const [selectedItems, setSelectedItems] = useState<HabitType | AreaType | null>(null);
     const { isLoaded, isSignedIn, user } = useUser();
+    const [openAreaForm, setOpenAreaForm] = useState(false);
+    const[openIconWindow, setOpenIconWindow] = useState(false);
+    const [iconSelected, setIconSelected] = useState<IconProp>(faCoffee);
 
     useEffect(() => {
         const fetchAllHabits = async () => {
@@ -164,9 +178,9 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         
         function fetchAllAreas() {
             const allAreasData: AreaType[] = [
-              { _id: uuidv4(), icon: textToIcon("faGlobe"), name: "All" },
-              { _id: uuidv4(), icon: textToIcon("faCoffee"), name: "Study" },
-              { _id: uuidv4(), icon: textToIcon("faCode"), name: "Code" },
+              { _id: uuidv4(), icon: textToIcon("faGlobe"), clerkUserId: user?.id || "", name: "All" },
+              { _id: uuidv4(), icon: textToIcon("faCoffee"), clerkUserId: user?.id || "",  name: "Study" },
+              { _id: uuidv4(), icon: textToIcon("faCode"), clerkUserId: user?.id || "",  name: "Code" },
             ];
             setAllAreas(allAreasData);
         }
@@ -177,6 +191,9 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         setOpenSideBar(false);
+        setOpenAreaForm(false);
+        setOpenConfirmationWindow(false);
+        setOpenHabitWindow(false);
     }, [menuItems]);
 
     return (
@@ -232,6 +249,16 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 selectedItemsObject: {
                     selectedItems,
                     setSelectedItems,
+                },
+                openAreaFormObject: {
+                    openAreaForm,
+                    setOpenAreaForm,
+                },
+                openIconWindowObject: {
+                    openIconWindow,
+                    setIconSelected,
+                    iconSelected,
+                    setOpenIconWindow,
                 },
             }}
         >

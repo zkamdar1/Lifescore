@@ -3,10 +3,11 @@ import { AreaType, HabitType } from "./Types/GlobalTypes";
 import { deleteHabit } from "./utils/allHabitsUtils/deleteHabit";
 
 export function ConfirmationWindow() {
-    const { openConfirmationWindowObject, selectedItemsObject, allHabitsObject } = useGlobalContextProvider();
+    const { openConfirmationWindowObject, selectedItemsObject, allHabitsObject, darkModeObject } = useGlobalContextProvider();
     const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
     const { selectedItems, setSelectedItems } = selectedItemsObject;
     const { allHabits, setAllHabits } = allHabitsObject;
+    const { isDarkMode } = darkModeObject;
 
     function isAreaType(item: any): item is AreaType {
         return "name" in item && "icon" in item && !("frequency" in item);
@@ -20,7 +21,9 @@ export function ConfirmationWindow() {
         if (isHabitType(selectedItems)) {
             deleteHabit(allHabits, setAllHabits, selectedItems);
             setOpenConfirmationWindow(false);
-        }    
+        } else if (isAreaType(selectedItems)){
+            console.log("delete area")
+        }
     }
 
     return (

@@ -29,7 +29,7 @@ function IconWindow({
           backgroundColor: isDarkMode ? darkModeColor.background : "white",
           color: isDarkMode ? darkModeColor.textColor : "black",
             }}
-            className={`z-50 w-[80%] left-1/2 transform -translate-x-1/2 p-4 rounded-md border flex flex-col gap-6 shadow-md ${openIconWindow ? "absolute" : "hidden"}`}
+            className={`z-50 w-[70%] left-1/2 transform -translate-x-1/2 p-4 rounded-md border flex flex-col gap-6 shadow-md ${openIconWindow ? "absolute" : "hidden"}`}
         >
             <FontAwesomeIcon
                 onClick={() => {
