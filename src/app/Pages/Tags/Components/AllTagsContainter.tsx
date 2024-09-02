@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid"; 
 import addNewArea from "@/src/app/utils/allAreasUtils/addNewArea";
 import IconWindow from "../../AllHabits/Components/IconsWindow/IconWindow";
+import { useUser } from "@clerk/nextjs";
 
 function AllTagsContainer() {
     const {
@@ -21,10 +22,13 @@ function AllTagsContainer() {
         selectedItemsObject: { selectedItems },
         openIconWindowObject: {setOpenIconWindow, iconSelected, openIconWindow, setIconSelected},
     } = useGlobalContextProvider();
+    const { isLoaded, isSignedIn, user } = useUser();
+
 
     const [areaItem, setAreaItem] = useState<AreaType>({
         _id: "",
         name: "",
+        clerkUserId: user?.id || "",
         icon: faCoffee,
     });
 
