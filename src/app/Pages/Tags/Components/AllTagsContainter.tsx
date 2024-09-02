@@ -13,13 +13,14 @@ import { v4 as uuidv4 } from "uuid";
 import addNewArea from "@/src/app/utils/allAreasUtils/addNewArea";
 import IconWindow from "../../AllHabits/Components/IconsWindow/IconWindow";
 import { useUser } from "@clerk/nextjs";
+import editArea from "@/src/app/utils/allAreasUtils/editArea";
 
 function AllTagsContainer() {
     const {
         allAreasObject: { allAreas, setAllAreas },
         darkModeObject: { isDarkMode },
         openAreaFormObject: { openAreaForm, setOpenAreaForm },
-        selectedItemsObject: { selectedItems },
+        selectedItemsObject: { selectedItems, setSelectedItems },
         openIconWindowObject: {setOpenIconWindow, iconSelected, openIconWindow, setIconSelected},
     } = useGlobalContextProvider();
     const { isLoaded, isSignedIn, user } = useUser();
@@ -34,6 +35,7 @@ function AllTagsContainer() {
 
     function handleOnClose() {
        setOpenAreaForm(!openAreaForm);
+       setSelectedItems(null);
     }
 
     function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -66,7 +68,12 @@ function AllTagsContainer() {
             } catch (error) {
                 console.log(error);
             }
-       }
+        } else {
+            editArea({allAreas, setAllAreas, areaItem});
+
+            setOpenAreaForm(false);
+        }
+        setSelectedItems(null);
     }
 
     useEffect(() => {
@@ -76,12 +83,17 @@ function AllTagsContainer() {
                 name: "",
             }));
             return;
+        } else {
+            if (!selectedItems) {
+                setAreaItem({
+                    ...areaItem,
+                    _id: "",
+                    clerkUserId: user?.id as string,
+                });
+            } else {
+                setAreaItem(selectedItems);
+            }
         }
-
-        setAreaItem({
-            ...areaItem,
-            _id: uuidv4(),
-        });
     }, [openAreaForm]);
 
     useEffect(() => {
@@ -104,7 +116,7 @@ function AllTagsContainer() {
             <DataFormModel
                 isOpen={openAreaForm}
                 onClose={handleOnClose}
-                FormTitle="Add New Tag"
+                FormTitle={selectedItems ? "Edit Tag" : "Add New Tag"}
                 textValue={areaItem.name}
                 onChange={handleOnChange}
                 onClick={handleOnClick}

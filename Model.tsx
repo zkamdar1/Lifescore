@@ -56,7 +56,7 @@ export default function DataFormModel({
                         onClick={onClick}
                         className="bg-customRed text-white mt-10 p-3 px-6"
                     >
-                        Add New Tag
+                        {FormTitle === "Add New Tag" ? "Add New Tag" : "Edit Tag"}
                     </Button>
                 </div>
             )}

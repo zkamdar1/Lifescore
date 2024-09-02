@@ -14,10 +14,11 @@ import {
     faGraduationCap,
     faCode,
     faCoffee,
+    faGlobe,
 } from "@fortawesome/free-solid-svg-icons";
 import { AreaType, HabitType } from "./Types/GlobalTypes";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { textToIcon } from "./Pages/AllHabits/Components/IconsWindow/IconData";
+import { iconToText, textToIcon } from "./Pages/AllHabits/Components/IconsWindow/IconData";
 import { getDateString } from "./utils/allHabitsUtils/DateFunction";
 import { v4 as uuidv4 } from "uuid"; 
 import { useUser } from "@clerk/nextjs";
@@ -176,18 +177,77 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
             }
         };
         
-        function fetchAllAreas() {
-            const allAreasData: AreaType[] = [
-              { _id: uuidv4(), icon: textToIcon("faGlobe"), clerkUserId: user?.id || "", name: "All" },
-              { _id: uuidv4(), icon: textToIcon("faCoffee"), clerkUserId: user?.id || "",  name: "Study" },
-              { _id: uuidv4(), icon: textToIcon("faCode"), clerkUserId: user?.id || "",  name: "Code" },
-            ];
-            setAllAreas(allAreasData);
-        }
+        async function fetchAllAreas() {
+            try {
+              const response = await fetch(`/api/areas?clerkId=${user?.id}`);
+              if (!response.ok) {
+                throw new Error("Failed to fetch tags");
+              }
+              const data: { areas: AreaType[] } = await response.json();
+
+              if (data.areas.length === 0) {
+                const allAreas = await addTheAllArea();
+
+                if (typeof allAreas?.icon === "string") {
+                  const updatedAreas = {
+                    ...allAreas,
+                    icon: textToIcon(allAreas.icon) as IconProp,
+                  };
+
+                  setAllAreas([updatedAreas]);
+                }
+                return;
+              }
+
+              const updatedAreas = data.areas.map((area: AreaType) => {
+                if (typeof area.icon === "string") {
+                  return {
+                    ...area,
+                    icon: textToIcon(area.icon) as IconProp,
+                  };
+                }
+                return area;
+              });
+                
+              setAllAreas(updatedAreas);
+            } catch (error) { }
+        } 
         
-        fetchAllHabits();
-        fetchAllAreas();
-    }, [isLoaded, isSignedIn]);
+        if (isLoaded && isSignedIn) {
+            fetchAllHabits();
+            fetchAllAreas();
+        }
+    }, [isLoaded, isSignedIn, user?.id]);
+
+    async function addTheAllArea() {
+        const allArea = {
+            icon: iconToText(faGlobe),
+            name: "All",
+            clerkUserId: user?.id as string,
+        };
+
+        try {
+            const response = await fetch("/api/areas", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "applications/json",
+                    },
+
+                    body: JSON.stringify(allArea),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to add habit")
+            }
+
+            const data = await response.json();
+            const { _id } = data.area;
+
+            const updatedIdOfArea = { ...allArea, _id: _id };
+
+            return updatedIdOfArea;
+        } catch (error) {}
+    };
 
     useEffect(() => {
         setOpenSideBar(false);

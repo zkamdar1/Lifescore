@@ -12,13 +12,14 @@ interface dropMenuItem {
 }
 
 function DropDown() {
-    const { darkModeObject, openDropDownObject, dropDownPositionsObject, openConfirmationWindowObject, selectedItemsObject, habitWindowObject } = useGlobalContextProvider();
+    const { darkModeObject, openDropDownObject, dropDownPositionsObject, openConfirmationWindowObject, selectedItemsObject, habitWindowObject, openAreaFormObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
     const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
     const { openDropDown, setOpenDropDown } = openDropDownObject;
     const { dropDownPositions } = dropDownPositionsObject;
     const { setSelectedItems, selectedItems} = selectedItemsObject;
     const { openHabitWindow, setOpenHabitWindow } = habitWindowObject;
+    const { openAreaForm, setOpenAreaForm } = openAreaFormObject;
     const ref = useRef<HTMLDivElement>(null);
     const dropDownMenuItems: dropMenuItem[] = [
         { name: "Edit", icon: faPencil },
@@ -38,7 +39,7 @@ function DropDown() {
     }
 
     function isAreaType(item: any): item is AreaType {
-      return "icon" in item && "name" in item && !("frequency in item");
+      return "icon" in item && "name" in item && !("frequency" in item);
     }
 
     function handleClickedOpen(index: number) {
@@ -47,7 +48,7 @@ function DropDown() {
                 if (isHabitType(selectedItems)) {
                     setOpenHabitWindow(true);
                 } else if (isAreaType(selectedItems)) {
-                    console.log("editArea")
+                    setOpenAreaForm(true);
                 }
                 setOpenDropDown(false);
 
@@ -66,7 +67,7 @@ function DropDown() {
         function handleOutsideClicked(event: MouseEvent) {
             if (ref && !ref.current?.contains(event.target as Node)) {
                 setOpenDropDown(false);
-                if (!openConfirmationWindow && !openHabitWindow) {
+                if (!openConfirmationWindow && !openHabitWindow && !openAreaForm) {
                     setSelectedItems(null);
                 }
             }
